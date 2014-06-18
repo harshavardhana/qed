@@ -17,6 +17,22 @@
  */
 /*jslint node: true */
 
+/*
+ * Copyright 2014 Hyperbotics.org - Additional modifications
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 'use strict';
 
 var http = require('http');
@@ -68,6 +84,28 @@ WebServer.prototype = {
   _handler: function (req, res) {
     var agent = req.headers['user-agent'];
     var url = req.url;
+    if (req.url == '/') {
+      var viewerpath = path.join(this.root, 'viewer.html');
+      path.exists(viewerpath, function(exists) {
+        if (exists) {
+          fs.readFile(viewerpath, function(err, content) {
+            if (err) {
+              res.writeHead(500);
+              res.end();
+            }
+            else {
+              res.writeHead(200, { 'Content-Type': 'text/html' });
+              res.end(content, 'utf-8');
+            }
+          });
+        }
+        else {
+          res.writeHead(404);
+          res.end();
+        }
+      });
+      return;
+    }
     var urlParts = /([^?]*)((?:\?(.*))?)/.exec(url);
     var pathPart = decodeURI(urlParts[1]), queryPart = urlParts[3];
     var verbose = this.verbose;
@@ -86,7 +124,7 @@ WebServer.prototype = {
     }
 
     if (pathPart === '/favicon.ico') {
-      fs.realpath(path.join(this.root, 'test/resources/favicon.ico'),
+      fs.realpath(path.join(this.root, 'images/favicon.ico'),
                   checkFile);
       return;
     }

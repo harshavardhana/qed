@@ -54,9 +54,9 @@ var FindStates = {
   FIND_PENDING: 3
 };
 
-PDFJS.imageResourcesPath = './images/';
-  PDFJS.workerSrc = '../build/pdf.worker.js';
-  PDFJS.cMapUrl = '../web/cmaps/';
+PDFJS.imageResourcesPath = './images';
+  PDFJS.workerSrc = 'pdf.worker.js';
+  PDFJS.cMapUrl = './cmaps';
   PDFJS.cMapPacked = true;
 
 var mozL10n = document.mozL10n || document.webL10n;
@@ -1217,7 +1217,7 @@ var PDFFindController = {
         if (!this.hadMatch) {
           // No point in wrapping there were no matches.
           this.updateMatch(false);
-          // while matches were not found, searching for a page 
+          // while matches were not found, searching for a page
           // with matches should nevertheless halt.
           return true;
         }
@@ -2595,7 +2595,7 @@ var DocumentProperties = {
 
   parseDate: function documentPropertiesParseDate(inputDate) {
     // This is implemented according to the PDF specification (see
-    // http://www.gnupdf.org/Date for an overview), but note that 
+    // http://www.gnupdf.org/Date for an overview), but note that
     // Adobe Reader doesn't handle changing the date to universal time
     // and doesn't use the user's time zone (they're effectively ignoring
     // the HH' and mm' parts of the date string).
@@ -6104,5 +6104,3 @@ window.addEventListener('afterprint', function afterPrint(evt) {
     window.requestAnimationFrame(resolve);
   });
 })();
-
-
