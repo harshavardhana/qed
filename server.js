@@ -84,6 +84,12 @@ WebServer.prototype = {
   _handler: function (req, res) {
     var agent = req.headers['user-agent'];
     var url = req.url;
+    console.log(req.url);
+    if (req.url.indexOf("http") > -1 ) {
+      res.writeHead(500);
+      res.end();
+      return;
+    }
     if (req.url == '/') {
       var viewerpath = path.join(this.root, 'viewer.html');
       path.exists(viewerpath, function(exists) {
