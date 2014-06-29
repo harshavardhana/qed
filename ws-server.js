@@ -22,7 +22,7 @@ var mimeTypes = {
   '.properties': 'text/plain'
 };
 
-var ipAddress = 'localhost';
+var ipAddress = 'qed.zone';
 var port = 4002;
 var defaultMimeType = 'application/octet-stream';
 
@@ -35,9 +35,9 @@ wsServer.broadcast = function(data) {
 
 wsServer.on('connection', function(ws) {
   ws.on('message', function(message) {
+    wsServer.broadcast(message);
     console.log('received: %s', message);
   });
-  wsServer.broadcast(message);
 });
 
 console.log('Listening to ' + ipAddress + ':' + port + ' ...');
