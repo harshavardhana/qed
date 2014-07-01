@@ -1,26 +1,31 @@
+var fs = require('fs');
 var WebSocket = require('ws');
-var wsClient = new WebSocket('ws://qed.zone:4002');
-var i = 0;
+var serverHost = 'ws://qed.zone:4002';
+var wsClient = new WebSocket(serverHost);
 
-wsClient.on('open', function() {
-  console.log('connected');
-  wsClient.send(i.toString(), function(error) {
-    if (error)
-      console.log (error);
+if (process.argv.length > 2) {
+  wsClient.on('open', function() {
+    console.log ('connected');
+    fs.readFile(process.argv[process.argv.length - 1], function(err, data) {
+      console.log(data);
+      if (err)
+        throw err;
+      wsClient.send(data, function(error) {
+        if (error)
+          console.log (error);
+      });
+    });
   });
-});
+}
 
 wsClient.on('close', function() {
   console.log('disconnected');
 });
 
 wsClient.on('message', function(data, flags) {
-  console.log("Received: (" + data + ")");
-  i = parseInt(data) + 1;
-  setTimeout(function() {
-    wsClient.send(i.toString(), function(error) {
-      if (error)
-        console.log (error);
-    });
-  }, 500);
+  fs.writeFile('test.pdf', data, function (err) {
+    if (err)
+      throw err;
+    console.log('It\'s Saved!');
+  });
 });
