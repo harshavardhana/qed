@@ -1,17 +1,26 @@
-var WebSocketClient = require('ws');
-var wsClient = new WebSocketClient('ws://qed.zone:4002/',
-                                   {protocolVersion: 8,
-                                    origin: 'http://websocket.org'});
+var WebSocket = require('ws');
+var wsClient = new WebSocket('ws://qed.zone:4002');
+var i = 0;
+
 wsClient.on('open', function() {
   console.log('connected');
-  wsClient.send(Date.now().toString(), {mask: true});
+  wsClient.send(i.toString(), function(error) {
+    if (error)
+      console.log (error);
+  });
 });
+
 wsClient.on('close', function() {
   console.log('disconnected');
 });
+
 wsClient.on('message', function(data, flags) {
-  console.log('Roundtrip time: ' + (Date.now() - parseInt(data)) + 'ms', flags);
+  console.log("Received: (" + data + ")");
+  i = parseInt(data) + 1;
   setTimeout(function() {
-    wsClient.send(Date.now().toString(), {mask: true});
+    wsClient.send(i.toString(), function(error) {
+      if (error)
+        console.log (error);
+    });
   }, 500);
 });
