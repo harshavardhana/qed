@@ -18,9 +18,18 @@ wsServer.broadcast = function(data) {
 
 wsServer.on('connection', function(ws) {
   ws.on('message', function(message) {
-    wsServer.broadcast(message);
+    switch (message.client_type) {
+    case "CONTROLLER":
+      console.log ("Skip controller node");
+      break;
+    case "VIEWER":
+      console.log('broadcasting message to all clients');
+      wsServer.broadcast(message);
+      break;
+    default:
+      console.log ("Skip un-supported mode");
+    }
   });
-  console.log('broadcasting message to all clients');
 });
 
 console.log('Listening to ' + hostName + ':' + port + ' ...');
