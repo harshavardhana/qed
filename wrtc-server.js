@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+'use strict';
+
 var path = require('path');
 var fs = require('fs');
 var PeerServer = require('peer').PeerServer;
