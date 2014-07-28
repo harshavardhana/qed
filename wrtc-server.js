@@ -1,16 +1,22 @@
 #!/usr/bin/env node
 
 var path = require('path');
-var fs = require('fs')
+var fs = require('fs');
 var PeerServer = require('peer').PeerServer;
+var ServerException = require('./errors').ServerException;
+
 var opts = require('optimist')
   .usage('Usage: $0')
   .options({
-    debug: {
+    port: {
+      demand: true,
+      alias: 'p',
+      description: 'port'
+    },
+    path: {
       demand: false,
-      alias: 'd',
-      description: 'debug',
-    default: false
+      description: 'custom path',
+    default: '/qed'
     },
     timeout: {
       demand: false,
@@ -24,15 +30,11 @@ var opts = require('optimist')
       description: 'concurrent limit',
     default: 1000
     },
-    port: {
-      demand: true,
-      alias: 'p',
-      description: 'port'
-    },
-    path: {
+    debug: {
       demand: false,
-      description: 'custom path',
-    default: '/qed'
+      alias: 'd',
+      description: 'debug',
+    default: false
     },
     allow_discovery: {
       demand: false,
@@ -42,18 +44,20 @@ var opts = require('optimist')
   .boolean('allow_discovery')
   .argv;
 
-opts.version = 0.1;
-if (opts.sslkey && opts.sslcert) {
-  opts['ssl'] = {};
-  opts.ssl['key'] = fs.readFileSync(path.resolve(opts.sslkey));
-  opts.ssl['certificate'] = fs.readFileSync(path.resolve(opts.sslcert));
+try {
+  if (opts.sslkey && opts.sslcert) {
+    opts['ssl'] = {};
+    opts.ssl['key'] = fs.readFileSync(path.resolve(opts.sslkey));
+    opts.ssl['certificate'] = fs.readFileSync(path.resolve(opts.sslcert));
+  }
+} catch (e) {
+  throw new ServerException(e);
 }
 
-process.on('uncaughtException', function(e) {
-  console.error('Error: ' + e);
-});
+try {
+  var server = new PeerServer(opts);
+} catch (e) {
+  throw new ServerException(e);
+}
 
-var server = new PeerServer(opts);
-console.log(
-  'Started PeerServer, port: ' + opts.port + ', path: ' + (opts.path || '/') + (" (v. %s)"), opts.version
-);
+console.log('Started RTCServer, port: ' + opts.port + ', path: ' + opts.path);
