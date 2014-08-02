@@ -14,19 +14,20 @@
         return connection.peer;
       });
     },
-    componentWillMount: function() {
-      var peer, who;
+    getlistConnections: function() {
+      var peer;
       var _this = this;
-      who = getSegments()[1];
-      peer = new Peer(who, {
-        //only used for 0.peerjs.com
-        //key: PEER_KEY,
-        debug: 2,
-        host: 'hyperbotics.org',
-        port: '9000',
-        path: '/qed'
-      });
+      var webrtcconfig = {
+        who: "x",
+        host: "harshavardhana.net",
+        port: "8000",
+        path: "/qed",
+        debug: 2
+      };
+
+      peer = new Peer(who, webrtcconfig});
       this.connections = [];
+
       peer.on("error", function(error) {
         return alert(error.type);
       });

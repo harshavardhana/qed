@@ -1,7 +1,7 @@
 QED
 ====
 
-    # git clone https://github.com/hyperbotics/qed.git
+    # git clone https://github.com/harshavardhana/qed.git
 
     # cd qed.git
 
