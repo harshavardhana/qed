@@ -17,7 +17,7 @@ module.exports = {
   ServerException: function (message) {
     this.message = message;
     this.name = "ServerException";
-  }
+  },
   ClientException: function (message) {
     this.message = message;
     this.name = "ClientException";

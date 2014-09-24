@@ -26,11 +26,13 @@ var ws_obj = { hostName: 'localhost',
                wsServer: null};
 try {
   ws_obj.wsServer = new WebSocketServer({host: ws_obj.hostName,
-                                             port: ws_obj.port});
+                                         port: ws_obj.port,
+                                         clientTracking: false});
 } catch (e) {
-  throw new errors.ServerException(e)
+  throw new errors.ServerException(e);
 }
 
+var clients = [];
 
 function send_message_data(data, client) {
   if (!data)
@@ -39,22 +41,33 @@ function send_message_data(data, client) {
 }
 
 function send_message_all_clients(data) {
-  for (var i in this.clients)
-    send_message_data (data, this.clients[i])
+  var i = 0;
+  var tot = 0;
+  for (tot=clients.length; i < tot; i++) {
+    // Send controller node data to clients
+    if (clients[i].type == 'CLIENT')
+      send_message_data (data, clients[i].conn)
+  }
 }
 
 ws_obj.wsServer.on('connection', function(ws) {
+  // keep clients list for future use
   ws.on('message', function(message) {
-    switch (message.client_type) {
-    case "CONTROLLER":
-      console.log ("Skip controller node");
-      break;
-    case "CLIENT":
-      console.log('broadcasting message to all clients');
-      ws_obj.broadcast(message.data);
-      break;
-    default:
-      console.log ("Skip un-supported mode");
+    var client = JSON.parse(message);
+
+    if (client.type === 'NONE') {
+      console.log ("Unrecognized client");
+    }
+
+    clients.push({
+      type: client.type,
+      conn: ws
+    });
+
+    if (client.type === 'CONTROLLER') {
+      if (client.data) {
+        send_message_all_clients (client.data);
+      }
     }
   });
 });

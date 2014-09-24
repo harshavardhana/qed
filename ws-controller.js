@@ -41,7 +41,8 @@ wsClient.on('open', function() {
     throw err;
     send_obj.client_data = data;
   */
-  send_obj.type = "CLIENT";
+  send_obj.type = "CONTROLLER";
+  send_obj.data = "Hello brother";
   wsClient.send(JSON.stringify(send_obj), function(error) {
     if (error)
       console.log (error);
