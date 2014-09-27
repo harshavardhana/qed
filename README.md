@@ -10,4 +10,5 @@ QED
     # node make server
 
     ### Starting local server
-    Server running at http://localhost:4001/
+    Web server running at http://localhost:4001/
+    Socket server running at ws://localhost:4002 ...
