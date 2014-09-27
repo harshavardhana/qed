@@ -17,22 +17,15 @@
 
 var path = require('path');
 var fs = require('fs');
-var WebSocketServer = require('ws').Server;
-
 var errors = require('./errors');
+var wsocket = require('ws').Server;
 
-var ws_obj = { hostName: 'localhost',
-               port: 4002,
-               wsServer: null};
-try {
-  ws_obj.wsServer = new WebSocketServer({host: ws_obj.hostName,
-                                         port: ws_obj.port,
-                                         clientTracking: false});
-} catch (e) {
-  throw new errors.ServerException(e);
+function WebSocketServer() {
+  this.host = 'localhost';
+  this.port = '4002';
+  this.wsserver = null;
+  this.clients = [];
 }
-
-var clients = [];
 
 function send_message_data(data, client) {
   if (!data)
@@ -40,36 +33,61 @@ function send_message_data(data, client) {
   client.send (data);
 }
 
-function send_message_all_clients(data) {
-  var i = 0;
-  var tot = 0;
-  for (tot=clients.length; i < tot; i++) {
-    // Send controller node data to clients
-    if (clients[i].type == 'CLIENT')
-      send_message_data (data, clients[i].conn)
-  }
-}
+WebSocketServer.prototype = {
+  start: function (callback) {
+    this.wsserver = new wsocket({host: this.host,
+                                 port: this.port,
+                                 clientTracking: false,
+                                 callback: callback});
+    var _this = this;
+    this.wsserver.on('connection', function(ws) {
+      // keep clients list for future use
+      ws.on('message', function(message) {
+        var client = JSON.parse(message);
 
-ws_obj.wsServer.on('connection', function(ws) {
-  // keep clients list for future use
-  ws.on('message', function(message) {
-    var client = JSON.parse(message);
+        if (client.type === 'NONE') {
+          console.log ("Unrecognized client");
+        }
 
-    if (client.type === 'NONE') {
-      console.log ("Unrecognized client");
-    }
+        _this.clients.push({
+          type: client.type,
+          conn: ws
+        });
 
-    clients.push({
-      type: client.type,
-      conn: ws
-    });
+        if (client.type === 'CONTROLLER') {
+          if (client.data) {
+            send_message_all_clients (client.data);
+          }
+        }
+      });
 
-    if (client.type === 'CONTROLLER') {
-      if (client.data) {
-        send_message_all_clients (client.data);
+      ws.on('close', function() {
+        var i = 0;
+        var tot = 0;
+        for (tot=_this.clients.length; i < tot; i++) {
+          if (_this.clients[i].conn === ws)
+            _this.clients.splice(i, 1);
+        }
+      });
+
+      function send_message_all_clients(data) {
+        var i = 0;
+        var tot = 0;
+        for (tot=_this.clients.length; i < tot; i++) {
+          // Send controller node data to clients
+          if (_this.clients[i].type === 'CLIENT')
+            send_message_data (data, _this.clients[i].conn)
+        }
       }
-    }
-  });
-});
+    });
+    console.log(
+      'Socket server running at ws://' + this.host + ':' + this.port + ' ...'
+    );
+  },
+  stop: function() {
+    this.wsserver.close();
+    this.wsserver = null;
+  }
+};
 
-console.log('Listening to ' + ws_obj.hostName + ':' + ws_obj.port + ' ...');
+exports.WebSocketServer = WebSocketServer;

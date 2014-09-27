@@ -27,9 +27,13 @@ target.server = function() {
   echo();
   echo('### Starting local server');
 
-  var WebServer = require('./server.js').WebServer;
+  var WebServer = require('./http-server.js').WebServer;
+  var SocketServer = require('./ws-server.js').WebSocketServer;
   var server = new WebServer();
+  var wsocket = new SocketServer();
   server.port = 4001;
+  wsocket.port = 4002;
   server.root = "web";
   server.start();
+  wsocket.start();
 };

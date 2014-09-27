@@ -5461,8 +5461,6 @@ function webViewerInitialized() {
       (hashParams['ignoreCurrentPositionOnZoom'] === 'true');
   }
 
-
-
   var locale = PDFJS.locale || navigator.language;
   if ('locale' in hashParams) {
     locale = hashParams['locale'];
@@ -5599,7 +5597,6 @@ function webViewerInitialized() {
   document.getElementById('download').addEventListener('click',
     SecondaryToolbar.downloadClick.bind(SecondaryToolbar));
 
-
   if (file) {
     PDFView.open(file, 0);
   }
@@ -5712,24 +5709,28 @@ window.addEventListener('hashchange', function webViewerHashchange(evt) {
 
 window.addEventListener('change', function webViewerChange(evt) {
   var files = evt.target.files;
+
   if (!files || files.length === 0) {
     return;
   }
   var file = files[0];
 
+  // Commented out blob URL since we need binary data
+  /*
   if (!PDFJS.disableCreateObjectURL &&
       typeof URL !== 'undefined' && URL.createObjectURL) {
-    PDFView.open(URL.createObjectURL(file), 0);
+    var blob = URL.createObjectURL(file)
+    PDFView.open(blob, 0);
   } else {
-    // Read the local file into a Uint8Array.
-    var fileReader = new FileReader();
-    fileReader.onload = function webViewerChangeFileReaderOnload(evt) {
-      var buffer = evt.target.result;
-      var uint8Array = new Uint8Array(buffer);
-      PDFView.open(uint8Array, 0);
-    };
-    fileReader.readAsArrayBuffer(file);
-  }
+  */
+  // Read the local file into a Uint8Array.
+  var fileReader = new FileReader();
+  fileReader.onload = function webViewerChangeFileReaderOnload(evt) {
+    var buffer = evt.target.result;
+    var uint8Array = new Uint8Array(buffer);
+    PDFView.open(uint8Array, 0);
+  };
+  fileReader.readAsArrayBuffer(file);
 
   PDFView.setTitleUsingUrl(file.name);
 
@@ -5843,9 +5844,13 @@ function handleMouseWheel(evt) {
   }
 }
 
+// Firefox specific
 window.addEventListener('DOMMouseScroll', handleMouseWheel);
+// Not implemented - only IE support
+// http://msdn.microsoft.com/en-us/library/ie/ms536951%28v=vs.85%29.aspx
 window.addEventListener('mousewheel', handleMouseWheel);
 
+//A pointing device button has been pressed and released on an element.
 window.addEventListener('click', function click(evt) {
   if (!PresentationMode.active) {
     if (SecondaryToolbar.opened && PDFView.container.contains(evt.target)) {
@@ -5858,6 +5863,7 @@ window.addEventListener('click', function click(evt) {
   }
 }, false);
 
+//A key is pressed down.
 window.addEventListener('keydown', function keydown(evt) {
   if (OverlayManager.active) {
     return;

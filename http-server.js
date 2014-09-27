@@ -75,7 +75,7 @@ WebServer.prototype = {
     this.server = http.createServer(this._handler.bind(this));
     this.server.listen(this.port, this.host, callback);
     console.log(
-      'Server running at http://' + this.host + ':' + this.port + '/');
+      'Web server running at http://' + this.host + ':' + this.port + '/');
   },
   stop: function (callback) {
     this.server.close(callback);
