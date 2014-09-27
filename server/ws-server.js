@@ -17,7 +17,7 @@
 
 var path = require('path');
 var fs = require('fs');
-var errors = require('./errors');
+var errors = require('../web/custom/errors');
 var wsocket = require('ws').Server;
 
 function WebSocketServer() {
