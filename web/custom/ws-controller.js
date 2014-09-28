@@ -17,8 +17,13 @@
 
 var fs = require('fs');
 var WebSocket = require('ws');
-var errors = require('./errors');
-var config = require('./config');
+var errors = require('../../server/errors');
+
+var config = {};
+
+config.ws = {};
+config.ws.host = 'localhost';
+config.ws.port = 4002;
 
 try {
   var serverHost = 'ws://' + config.ws.host + ':' + config.ws.port;
@@ -43,7 +48,7 @@ wsClient.on('open', function() {
   */
   send_obj.type = "CONTROLLER";
   send_obj.data = "Hello brother";
-  wsClient.send(JSON.stringify(send_obj), function(error) {
+  wsClient.send(JSON.stringify(send_obj), {binary:true}, function(error) {
     if (error)
       console.log (error);
   });

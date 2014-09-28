@@ -60,6 +60,7 @@ WebSocketServer.prototype = {
             send_message_all_clients (client.data);
           }
         }
+        console.log(_this.clients);
       });
 
       ws.on('close', function() {

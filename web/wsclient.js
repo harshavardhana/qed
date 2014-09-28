@@ -20,37 +20,32 @@ config.ws = {}
 config.ws.host = "localhost";
 config.ws.port = 4002;
 
-// Initializing PDFJS global object (if still undefined)
-function webSocketSupported() {
-  return "Websocket" in window;
-}
-
 var WS = {
   host: config.ws.host,
   port: config.ws.port,
   client: null,
   message: {},
-  connected: false,
-  supported: false,
+  supported: "WebSocket" in window,
 
-  init: function () {
-    this.supported = WebSocketSupported();
-  },
   start: function () {
     if (this.supported) {
       var serverHost = 'ws://' + this.host + ':' + this.port;
       this.client = new WebSocket(serverHost);
       this.client.binaryType = "arraybuffer";
-
+      var _this = this;
       this.client.addEventListener("open", function(evt) {
-      this.connected = true;
-        console.log ('connected');
+        var message = {
+          type: 'CLIENT',
+          data: null
+        };
+        _this.client.send(JSON.stringify(message));
+        console.log('connected');
       });
-
       this.client.addEventListener('close', function(evt) {
         console.log('disconnected');
       });
       this.client.addEventListener('message', function(evt) {
+        console.log(evt);
         if (typeof evt.data !== 'undefined') {
           if (typeof evt.type === 'Binary')
             PDFView.open(evt.data, 0);
@@ -59,17 +54,16 @@ var WS = {
     }
   },
   send: function(array) {
-    if (this.connected && this.supported) {
+    if ((this.client.readyState == 1) && this.supported) {
       if (typeof array !== 'undefined') {
         this.message.type = "CONTROLLER";
         this.message.data = array;
+        this.client.send(JSON.stringify(this.message));
+        if (this.client.bufferredAmount !== 0) {
+          console.log ("Data not sent");
+        }
       } else {
-        this.message.type = "CLIENT";
-        this.message.data = null;
-      }
-      this.client.send(JSON.stringify(this.message));
-      if (this.client.bufferredAmount !== 0) {
-        console.log ("Data not sent");
+        console.log ("Nothing to do");
       }
     }
   }

@@ -24,7 +24,7 @@
 
 'use strict';
 
-var DEFAULT_URL = '';//compressed.tracemonkey-pldi-09.pdf';
+var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
 var DEFAULT_SCALE = 'auto';
 var DEFAULT_SCALE_DELTA = 1.1;
 var UNKNOWN_SCALE = 0;
@@ -5397,6 +5397,7 @@ var DocumentAttachmentsView = function documentAttachmentsView(attachments) {
 
 function webViewerLoad(evt) {
   PDFView.initialize().then(webViewerInitialized);
+  WS.start();
 }
 
 function webViewerInitialized() {
@@ -5593,10 +5594,6 @@ function webViewerInitialized() {
 
   document.getElementById('download').addEventListener('click',
     SecondaryToolbar.downloadClick.bind(SecondaryToolbar));
-
-  if (file) {
-    PDFView.open(file, 0);
-  }
 }
 
 document.addEventListener('DOMContentLoaded', webViewerLoad, true);
