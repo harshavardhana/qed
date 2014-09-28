@@ -13,7 +13,12 @@
  * limitations under the License.
  */
 
-module.exports = {
+function Error() {
+  this.name = "";
+  this.message = "";
+}
+
+Error.prototype = {
   ServerException: function (message) {
     this.message = message;
     this.name = "ServerException";
@@ -23,3 +28,5 @@ module.exports = {
     this.name = "ClientException";
   }
 };
+
+module.exports = Error;

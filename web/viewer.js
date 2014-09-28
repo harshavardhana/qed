@@ -61,7 +61,6 @@ PDFJS.imageResourcesPath = './images';
 
 var mozL10n = document.mozL10n || document.webL10n;
 
-
 // optimised CSS custom property getter/setter
 var CustomStyle = (function CustomStyleClosure() {
 
@@ -5395,8 +5394,6 @@ var DocumentAttachmentsView = function documentAttachmentsView(attachments) {
     attachmentsView.appendChild(div);
   }
 };
-
-
 
 function webViewerLoad(evt) {
   PDFView.initialize().then(webViewerInitialized);

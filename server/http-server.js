@@ -303,4 +303,4 @@ WebServer.prototype = {
   }
 };
 
-exports.WebServer = WebServer;
+module.exports = WebServer;

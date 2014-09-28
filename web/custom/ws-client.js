@@ -15,47 +15,62 @@
 
 'use strict';
 
-var fs = require('fs');
-var WebSocket = require('ws');
-var errors = require('./errors');
-var config = require('./config');
+var config = {}
+config.ws = {}
+config.ws.host = "localhost";
+config.ws.port = 4002;
 
-try {
-  var serverHost = 'ws://' + config.ws.host + ':' + config.ws.port;
-  var wsClient = new WebSocket(serverHost);
-}
-catch (e) {
-  throw new errors.ClientException(e)
+// Initializing PDFJS global object (if still undefined)
+function webSocketSupported() {
+  return "Websocket" in window;
 }
 
-var send_obj = {};
-send_obj.type = "NONE";
-send_obj.data = null;
-send_obj.keyevent = "";
+var WS = {
+  host: config.ws.host,
+  port: config.ws.port,
+  client: null,
+  message: {},
+  connected: false,
+  supported: false,
 
-wsClient.on('open', function() {
-  console.log ('connected');
-  /*
-    fs.readFile(process.argv[process.argv.length - 1], function(err, client_data) {
-    if (err)
-    throw err;
-    send_obj.client_data = data;
-  */
-  send_obj.type = "CLIENT";
-  wsClient.send(JSON.stringify(send_obj), function(error) {
-    if (error)
-      console.log (error);
-  });
-});
+  init: function () {
+    this.supported = WebSocketSupported();
+  },
+  start: function () {
+    if (this.supported) {
+      var serverHost = 'ws://' + this.host + ':' + this.port;
+      this.client = new WebSocket(serverHost);
+      this.client.binaryType = "arraybuffer";
 
-wsClient.on('close', function() {
-  console.log('disconnected');
-});
+      this.client.addEventListener("open", function(evt) {
+      this.connected = true;
+        console.log ('connected');
+      });
 
-wsClient.on('message', function(data, flags) {
-  fs.writeFile('test.pdf', data, function (err) {
-    if (err)
-      throw err;
-    console.log('It\'s Saved!');
-  });
-});
+      this.client.addEventListener('close', function(evt) {
+        console.log('disconnected');
+      });
+      this.client.addEventListener('message', function(evt) {
+        if (typeof evt.data !== 'undefined') {
+          if (typeof evt.type === 'Binary')
+            PDFView.open(evt.data, 0);
+        }
+      });
+    }
+  },
+  send: function(array) {
+    if (this.connected && this.supported) {
+      if (typeof array !== 'undefined') {
+        this.message.type = "CONTROLLER";
+        this.message.data = array;
+      } else {
+        this.message.type = "CLIENT";
+        this.message.data = null;
+      }
+      this.client.send(JSON.stringify(this.message));
+      if (this.client.bufferredAmount !== 0) {
+        console.log ("Data not sent");
+      }
+    }
+  }
+};

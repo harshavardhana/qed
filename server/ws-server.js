@@ -17,7 +17,7 @@
 
 var path = require('path');
 var fs = require('fs');
-var errors = require('../web/custom/errors');
+var errors = require('./errors');
 var wsocket = require('ws').Server;
 
 function WebSocketServer() {
@@ -30,6 +30,7 @@ function WebSocketServer() {
 function send_message_data(data, client) {
   if (!data)
     throw new errors.ServerException("Invalid data");
+  // ArrayBuffer is automatically discovered and set
   client.send (data);
 }
 
@@ -90,4 +91,4 @@ WebSocketServer.prototype = {
   }
 };
 
-exports.WebSocketServer = WebSocketServer;
+module.exports = WebSocketServer;
