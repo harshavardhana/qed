@@ -27,7 +27,7 @@ var WS = {
   message: {},
   supported: "WebSocket" in window,
 
-  start: function () {
+  start: function (viewer) {
     if (this.supported) {
       var serverHost = 'ws://' + this.host + ':' + this.port;
       this.client = new WebSocket(serverHost);
@@ -35,7 +35,7 @@ var WS = {
       var _this = this;
       this.client.addEventListener("open", function(evt) {
         var message = {
-          type: 'CLIENT',
+          type: viewer,
           data: null
         };
         _this.client.send(JSON.stringify(message));
@@ -46,9 +46,6 @@ var WS = {
       });
       this.client.addEventListener('message', function(evt) {
         console.log(evt);
-        if (typeof evt.data !== 'undefined') {
-          if (typeof evt.type === 'Binary')
-            PDFView.open(evt.data, 0);
         }
       });
     }

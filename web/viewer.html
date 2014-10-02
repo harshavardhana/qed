@@ -25,12 +25,14 @@ http://sourceforge.net/adobe/cmap/wiki/License/
     <title>QED viewer</title>
 
     <link rel="stylesheet" href="viewer-minify.css"/>
+    <!-- Latest compiled and minified CSS -->
     <script src="compatibility-minify.js"></script>
     <!-- This snippet is used in production (included from viewer.html) -->
     <link rel="resource" type="application/l10n" href="locale/locale.properties"/>
     <script src="l10n-minify.js"></script>
     <script src="pdf.js"></script>
     <script src="debugger-minify.js"></script>
+    <script src="cookies.js"></script>
     <script src="viewer.js"></script>
     <script src="wsclient.js"></script>
   </head>
@@ -79,8 +81,7 @@ http://sourceforge.net/adobe/cmap/wiki/License/
           <input type="checkbox" id="findMatchCase" class="toolbarField">
           <label for="findMatchCase" class="toolbarLabel" tabindex="45" data-l10n-id="find_match_case_label">Match case</label>
           <span id="findMsg" class="toolbarLabel"></span>
-        </div>  <!-- findbar -->
-
+        </div> <!-- findbar -->
         <div id="secondaryToolbar" class="secondaryToolbar hidden doorHangerRight">
           <div id="secondaryToolbarButtonContainer">
             <button id="secondaryPresentationMode" class="secondaryToolbarButton presentationMode visibleLargeView" title="Switch to Presentation Mode" tabindex="19" data-l10n-id="presentation_mode">
@@ -385,7 +386,7 @@ http://sourceforge.net/adobe/cmap/wiki/License/
 }
       </style>
       <div class="mozPrintCallback-dialog-box">
-        <!-- TODO: Localise the following strings -->
+        <!-- TODO: Localize the following strings -->
         Preparing document for printing...
         <div class="progress-row">
           <progress value="0" max="100"></progress>

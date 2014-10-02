@@ -5395,9 +5395,20 @@ var DocumentAttachmentsView = function documentAttachmentsView(attachments) {
   }
 };
 
+function setCookie() {
+  var viewer = docCookies.getItem("viewer");
+  if (viewer === null) {
+    viewer = prompt("Please enter project number or cancel", "presenter");
+    docCookies.setItem("viewer", viewer, Infinity);
+  }
+  return viewer;
+}
+
 function webViewerLoad(evt) {
+  var viewer = setCookie();
+  console.log(viewer);
   PDFView.initialize().then(webViewerInitialized);
-  WS.start();
+  WS.start(viewer);
 }
 
 function webViewerInitialized() {
