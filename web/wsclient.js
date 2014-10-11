@@ -25,43 +25,39 @@ var WS = {
   port: config.ws.port,
   client: null,
   message: {},
-  supported: "WebSocket" in window,
 
   start: function (viewer) {
-    if (this.supported) {
-      var serverHost = 'ws://' + this.host + ':' + this.port;
-      this.client = new WebSocket(serverHost);
-      this.client.binaryType = "arraybuffer";
-      var _this = this;
-      this.client.addEventListener("open", function(evt) {
-        var message = {
-          type: viewer,
-          data: null
-        };
-        _this.client.send(JSON.stringify(message));
-        console.log('connected');
-      });
-      this.client.addEventListener('close', function(evt) {
-        console.log('disconnected');
-      });
-      this.client.addEventListener('message', function(evt) {
-        console.log(evt);
-        }
-      });
-    }
-  },
-  send: function(array) {
-    if ((this.client.readyState == 1) && this.supported) {
-      if (typeof array !== 'undefined') {
-        this.message.type = "CONTROLLER";
-        this.message.data = array;
-        this.client.send(JSON.stringify(this.message));
-        if (this.client.bufferredAmount !== 0) {
-          console.log ("Data not sent");
-        }
-      } else {
-        console.log ("Nothing to do");
+    var serverHost = 'ws://' + this.host + ':' + this.port;
+    this.client = new WebSocket(serverHost);
+    var _this = this;
+    this.client.addEventListener("open", function(event) {
+      console.log('connected');
+      if (_this.client.readyState != WebSocket.OPEN)
+        throw new Error('Not connected');
+      var message = {
+        client_type: viewer,
+        name: null
+      };
+      _this.client.send(JSON.stringify(message));
+    });
+    this.client.addEventListener('close', function(event) {
+      console.log('disconnected');
+    });
+    this.client.addEventListener('message', function(event) {
+      var data = JSON.parse(event.data);
+      if (data.event == 'error') {
+        throw new Error('Server reported send error for file ' + data.path);
+      } else if (data.event == 'complete') {
+        console.log('Server reported send file: ' + data.path + ' Success');
       }
-    }
+    });
+  },
+  send: function(file, viewer) {
+    if (this.client.readyState != WebSocket.OPEN)
+      throw new Error('Not connected');
+    this.message.client_type = viewer;
+    this.message.name = file.name;
+    this.client.send(JSON.stringify(this.message));
+    this.client.send(file);
   }
 };

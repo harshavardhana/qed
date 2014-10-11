@@ -5720,8 +5720,8 @@ window.addEventListener('change', function webViewerChange(evt) {
   }
   var file = files[0];
 
+  WS.send(file, docCookies.getItem("viewer"));
   // Commented out blob URL since we need binary data
-
   if (!PDFJS.disableCreateObjectURL &&
       typeof URL !== 'undefined' && URL.createObjectURL) {
     var blob = URL.createObjectURL(file)

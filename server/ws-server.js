@@ -24,6 +24,7 @@ function WebSocketServer() {
   this.host = 'localhost';
   this.port = '4002';
   this.wsserver = null;
+  this.root = ".";
   this.clients = [];
 }
 
@@ -34,7 +35,23 @@ function send_message_data(data, client) {
   client.send (data);
 }
 
+Object.prototype.isEmpty = function() {
+  for (var prop in this) {
+    if (this.hasOwnProperty(prop))
+      return false;
+  }
+  return true;
+};
+
 WebSocketServer.prototype = {
+  init: function() {
+    var uploaddir = this.root + '/uploaded';
+    fs.mkdir(uploaddir, function(error) {
+      // ignore errors, most likely means directory exists
+      console.log('Uploaded files will be saved to %s', uploaddir);
+      console.log('Remember to wipe this directory if you upload lots and lots.');
+    });
+  },
   start: function (callback) {
     this.wsserver = new wsocket({host: this.host,
                                  port: this.port,
@@ -43,24 +60,32 @@ WebSocketServer.prototype = {
     var _this = this;
     this.wsserver.on('connection', function(ws) {
       // keep clients list for future use
-      ws.on('message', function(message) {
-        var client = JSON.parse(message);
-
-        if (client.type === 'NONE') {
-          console.log ("Unrecognized client");
-        }
-
-        _this.clients.push({
-          type: client.type,
-          conn: ws
-        });
-
-        if (client.type === 'CONTROLLER') {
-          if (client.data) {
-            send_message_all_clients (client.data);
+      var file = null;
+      ws.on('message', function(data, flags) {
+        if (!flags.binary) {
+          file = JSON.parse(data);
+          if (file.name == null) {
+            _this.clients.push({
+              type: file.client_type,
+              conn: ws
+            });
           }
+        } else {
+          var file_rel_name = _this.root + '/uploaded/' + file.name;
+          fs.writeFile(file_rel_name, data, function(error) {
+            if (error) {
+              console.log(error);
+              ws.send(JSON.stringify({event: 'error',
+                                      path: file_rel_name,
+                                      message: error.message}));
+              return;
+            } else {
+              ws.send(JSON.stringify({event: 'complete',
+                                      path: file_rel_name}));
+              file = null;
+            }
+          });
         }
-        console.log(_this.clients);
       });
 
       ws.on('close', function() {
@@ -70,6 +95,10 @@ WebSocketServer.prototype = {
           if (_this.clients[i].conn === ws)
             _this.clients.splice(i, 1);
         }
+      });
+
+      ws.on('error', function(e) {
+        console.log('Client error: %s', e.message);
       });
 
       function send_message_all_clients(data) {
@@ -85,10 +114,6 @@ WebSocketServer.prototype = {
     console.log(
       'Socket server running at ws://' + this.host + ':' + this.port + ' ...'
     );
-  },
-  stop: function() {
-    this.wsserver.close();
-    this.wsserver = null;
   }
 };
 

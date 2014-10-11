@@ -34,6 +34,8 @@ target.server = function() {
   server.port = 4001;
   wsocket.port = 4002;
   server.root = "web";
+  wsocket.root = "web";
   server.start();
+  wsocket.init();
   wsocket.start();
 };
