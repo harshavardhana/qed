@@ -36,7 +36,8 @@ var WS = {
         throw new Error('Not connected');
       var message = {
         client_type: viewer,
-        name: null
+        name: null,
+        event: 'init'
       };
       _this.client.send(JSON.stringify(message));
     });
@@ -49,15 +50,27 @@ var WS = {
         throw new Error('Server reported send error for file ' + data.path);
       } else if (data.event == 'complete') {
         console.log('Server reported send file: ' + data.path + ' Success');
+        PDFView.open(data.path, 0);
+      } else if (data.event == 'key') {
+        PDFView.page++;
       }
     });
   },
-  send: function(file, viewer) {
+  sendFile: function(file, viewer) {
     if (this.client.readyState != WebSocket.OPEN)
       throw new Error('Not connected');
     this.message.client_type = viewer;
     this.message.name = file.name;
+    this.message.event = 'pdf';
     this.client.send(JSON.stringify(this.message));
     this.client.send(file);
+  },
+  sendKeyStroke: function(key, viewer) {
+    if (this.client.readyState != WebSocket.OPEN)
+      throw new Error('Not connected');
+    this.message.client_type = viewer;
+    this.message.name = null;
+    this.message.event = 'key';
+    this.client.send(JSON.stringify(this.message));
   }
 };

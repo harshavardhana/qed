@@ -5721,6 +5721,7 @@ window.addEventListener('change', function webViewerChange(evt) {
   var file = files[0];
 
   WS.send(file, docCookies.getItem("viewer"));
+  /*
   // Commented out blob URL since we need binary data
   if (!PDFJS.disableCreateObjectURL &&
       typeof URL !== 'undefined' && URL.createObjectURL) {
@@ -5736,6 +5737,7 @@ window.addEventListener('change', function webViewerChange(evt) {
     };
     fileReader.readAsArrayBuffer(file);
   }
+  */
   PDFView.setTitleUsingUrl(file.name);
 
   // URL does not reflect proper document location - hiding some icons.
