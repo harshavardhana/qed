@@ -5720,7 +5720,7 @@ window.addEventListener('change', function webViewerChange(evt) {
   }
   var file = files[0];
 
-  WS.send(file, docCookies.getItem("viewer"));
+  WS.sendFile(file, docCookies.getItem("viewer"));
   /*
   // Commented out blob URL since we need binary data
   if (!PDFJS.disableCreateObjectURL &&
@@ -5809,6 +5809,11 @@ window.addEventListener('scalechange', function scalechange(evt) {
   updateViewarea();
 }, true);
 
+window.addEventListener('openpdf', function openpdf(evt) {
+    var path = evt.pdfpath;
+    PDFView.open(path, 0);
+}, true);
+
 window.addEventListener('pagechange', function pagechange(evt) {
   var page = evt.pageNumber;
   if (PDFView.previousPageNumber !== page) {
@@ -5868,6 +5873,11 @@ window.addEventListener('click', function click(evt) {
     evt.preventDefault();
   }
 }, false);
+
+window.addEventListener('keypressedremote', function keypressedremote(evt) {
+    if (evt.keycode) {
+    }
+}, );
 
 //A key is pressed down.
 window.addEventListener('keydown', function keydown(evt) {

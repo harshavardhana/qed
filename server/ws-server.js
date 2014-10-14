@@ -60,7 +60,7 @@ WebSocketServer.prototype = {
     var _this = this;
     this.wsserver.on('connection', function(ws) {
       // keep clients list for future use
-      var file = null;
+      var message = null;
       ws.on('message', function(data, flags) {
         // if PDF data check to break out
         if (!flags.binary) {
@@ -68,7 +68,7 @@ WebSocketServer.prototype = {
           if (message.fname == null) {
             if (message.event == 'init') {
               _this.clients.push({
-                type: file.client_type,
+                type: message.client_type,
                 conn: ws,
               });
             } else if (message.event == 'key') {
@@ -89,7 +89,7 @@ WebSocketServer.prototype = {
             } else {
               send_message_all_clients(JSON.stringify({event: 'complete',
                                                        path: replyfname}));
-              file = null;
+              message = null;
             }
           });
         }

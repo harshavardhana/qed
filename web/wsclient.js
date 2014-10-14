@@ -36,7 +36,7 @@ var WS = {
         throw new Error('Not connected');
       var message = {
         client_type: viewer,
-        name: null,
+        fname: null,
         event: 'init'
       };
       _this.client.send(JSON.stringify(message));
@@ -50,9 +50,15 @@ var WS = {
         throw new Error('Server reported send error for file ' + data.path);
       } else if (data.event == 'complete') {
         console.log('Server reported send file: ' + data.path + ' Success');
-        PDFView.open(data.path, 0);
+        var event = document.createEvent('UIEvents');
+        event.initUIEvent('openpdf', false, false, window, 0);
+        event.pdfpath = data.path;
+        window.dispatchEvent(event);
       } else if (data.event == 'key') {
-        PDFView.page++;
+        var event = document.createEvent('UIEvents');
+        event.initUIEvent('keypressedremote', false, false, window, 0);
+        event.keycode = data.key;
+        window.dispatchEvent(event);
       }
     });
   },
@@ -60,7 +66,7 @@ var WS = {
     if (this.client.readyState != WebSocket.OPEN)
       throw new Error('Not connected');
     this.message.client_type = viewer;
-    this.message.name = file.name;
+    this.message.fname = file.name;
     this.message.event = 'pdf';
     this.client.send(JSON.stringify(this.message));
     this.client.send(file);
@@ -69,8 +75,9 @@ var WS = {
     if (this.client.readyState != WebSocket.OPEN)
       throw new Error('Not connected');
     this.message.client_type = viewer;
-    this.message.name = null;
+    this.message.fname = null;
     this.message.event = 'key';
+    this.message.key = key;
     this.client.send(JSON.stringify(this.message));
   }
 };
