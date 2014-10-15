@@ -68,12 +68,12 @@ WebSocketServer.prototype = {
           if (message.fname == null) {
             if (message.event == 'init') {
               _this.clients.push({
-                type: message.client_type,
+                type: message.clientType,
                 conn: ws,
               });
             } else if (message.event == 'key') {
               send_message_all_clients(JSON.stringify({event: 'key',
-                                                       key: message.key}));
+                                                       keyevent: message.keyevent}));
             }
           }
         } else {
@@ -99,8 +99,10 @@ WebSocketServer.prototype = {
         var i = 0;
         var tot = 0;
         for (tot=_this.clients.length; i < tot; i++) {
-          if (_this.clients[i].conn === ws)
-            _this.clients.splice(i, 1);
+          if (typeof _this.clients[i].conn !== 'undefined') {
+            if (_this.clients[i].conn === ws)
+              _this.clients.splice(i, 1);
+          }
         }
       });
 
@@ -108,7 +110,8 @@ WebSocketServer.prototype = {
         var i = 0;
         var tot = 0;
         for (tot=_this.clients.length; i < tot; i++) {
-          send_message_data (data, _this.clients[i].conn)
+          if (_this.clients[i].conn !== 'undefined')
+            send_message_data (data, _this.clients[i].conn)
         }
       }
 

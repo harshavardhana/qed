@@ -5874,22 +5874,18 @@ window.addEventListener('click', function click(evt) {
   }
 }, false);
 
-window.addEventListener('keypressedremote', function keypressedremote(evt) {
-    if (evt.keycode) {
-    }
-}, );
+window.addEventListener('keydown', function keydown(evt) {
+    WS.sendKeyStroke(evt, docCookies.getItem("viewer"));
+}, true);
 
 //A key is pressed down.
-window.addEventListener('keydown', function keydown(evt) {
+window.addEventListener('keypressedremote', function keypressedremote(data) {
   if (OverlayManager.active) {
     return;
   }
-
+  var evt = data.keyevent;
+  var cmd = data.keyevent.cmd;
   var handled = false;
-  var cmd = (evt.ctrlKey ? 1 : 0) |
-            (evt.altKey ? 2 : 0) |
-            (evt.shiftKey ? 4 : 0) |
-            (evt.metaKey ? 8 : 0);
 
   // First, handle the key bindings that are independent whether an input
   // control is selected or not.
@@ -5959,7 +5955,7 @@ window.addEventListener('keydown', function keydown(evt) {
   }
 
   if (handled) {
-    evt.preventDefault();
+    data.preventDefault();
     return;
   }
 
@@ -6106,7 +6102,7 @@ window.addEventListener('keydown', function keydown(evt) {
   }
 
   if (handled) {
-    evt.preventDefault();
+    data.preventDefault();
     PDFView.clearMouseScrollState();
   }
 });
