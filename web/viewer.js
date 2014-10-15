@@ -5720,7 +5720,8 @@ window.addEventListener('change', function webViewerChange(evt) {
   }
   var file = files[0];
 
-  WS.send(file, docCookies.getItem("viewer"));
+  WS.sendFile(file, docCookies.getItem("viewer"));
+  /*
   // Commented out blob URL since we need binary data
   if (!PDFJS.disableCreateObjectURL &&
       typeof URL !== 'undefined' && URL.createObjectURL) {
@@ -5736,6 +5737,7 @@ window.addEventListener('change', function webViewerChange(evt) {
     };
     fileReader.readAsArrayBuffer(file);
   }
+  */
   PDFView.setTitleUsingUrl(file.name);
 
   // URL does not reflect proper document location - hiding some icons.
@@ -5807,6 +5809,11 @@ window.addEventListener('scalechange', function scalechange(evt) {
   updateViewarea();
 }, true);
 
+window.addEventListener('openpdf', function openpdf(evt) {
+    var path = evt.pdfpath;
+    PDFView.open(path, 0);
+}, true);
+
 window.addEventListener('pagechange', function pagechange(evt) {
   var page = evt.pageNumber;
   if (PDFView.previousPageNumber !== page) {
@@ -5867,17 +5874,18 @@ window.addEventListener('click', function click(evt) {
   }
 }, false);
 
-//A key is pressed down.
 window.addEventListener('keydown', function keydown(evt) {
+    WS.sendKeyStroke(evt, docCookies.getItem("viewer"));
+}, true);
+
+//A key is pressed down.
+window.addEventListener('keypressedremote', function keypressedremote(data) {
   if (OverlayManager.active) {
     return;
   }
-
+  var evt = data.keyevent;
+  var cmd = data.keyevent.cmd;
   var handled = false;
-  var cmd = (evt.ctrlKey ? 1 : 0) |
-            (evt.altKey ? 2 : 0) |
-            (evt.shiftKey ? 4 : 0) |
-            (evt.metaKey ? 8 : 0);
 
   // First, handle the key bindings that are independent whether an input
   // control is selected or not.
@@ -5947,7 +5955,7 @@ window.addEventListener('keydown', function keydown(evt) {
   }
 
   if (handled) {
-    evt.preventDefault();
+    data.preventDefault();
     return;
   }
 
@@ -6094,7 +6102,7 @@ window.addEventListener('keydown', function keydown(evt) {
   }
 
   if (handled) {
-    evt.preventDefault();
+    data.preventDefault();
     PDFView.clearMouseScrollState();
   }
 });

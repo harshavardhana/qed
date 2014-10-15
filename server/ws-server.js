@@ -60,29 +60,36 @@ WebSocketServer.prototype = {
     var _this = this;
     this.wsserver.on('connection', function(ws) {
       // keep clients list for future use
-      var file = null;
+      var message = null;
       ws.on('message', function(data, flags) {
+        // if PDF data check to break out
         if (!flags.binary) {
-          file = JSON.parse(data);
-          if (file.name == null) {
-            _this.clients.push({
-              type: file.client_type,
-              conn: ws
-            });
+          message = JSON.parse(data);
+          if (message.fname == null) {
+            if (message.event == 'init') {
+              _this.clients.push({
+                type: message.clientType,
+                conn: ws,
+              });
+            } else if (message.event == 'key') {
+              send_message_all_clients(JSON.stringify({event: 'key',
+                                                       keyevent: message.keyevent}));
+            }
           }
         } else {
-          var file_rel_name = _this.root + '/uploaded/' + file.name;
-          fs.writeFile(file_rel_name, data, function(error) {
+          var fname = _this.root + '/uploaded/' + message.fname;
+          var replyfname = '/uploaded/' + message.fname;
+          fs.writeFile(fname, data, function(error) {
             if (error) {
               console.log(error);
-              ws.send(JSON.stringify({event: 'error',
-                                      path: file_rel_name,
-                                      message: error.message}));
+              send_message_all_clients(JSON.stringify({event: 'error',
+                                                       path: replyfname,
+                                                       message: error.message}));
               return;
             } else {
-              ws.send(JSON.stringify({event: 'complete',
-                                      path: file_rel_name}));
-              file = null;
+              send_message_all_clients(JSON.stringify({event: 'complete',
+                                                       path: replyfname}));
+              message = null;
             }
           });
         }
@@ -92,24 +99,25 @@ WebSocketServer.prototype = {
         var i = 0;
         var tot = 0;
         for (tot=_this.clients.length; i < tot; i++) {
-          if (_this.clients[i].conn === ws)
-            _this.clients.splice(i, 1);
+          if (typeof _this.clients[i].conn !== 'undefined') {
+            if (_this.clients[i].conn === ws)
+              _this.clients.splice(i, 1);
+          }
         }
-      });
-
-      ws.on('error', function(e) {
-        console.log('Client error: %s', e.message);
       });
 
       function send_message_all_clients(data) {
         var i = 0;
         var tot = 0;
         for (tot=_this.clients.length; i < tot; i++) {
-          // Send controller node data to clients
-          if (_this.clients[i].type === 'CLIENT')
+          if (_this.clients[i].conn !== 'undefined')
             send_message_data (data, _this.clients[i].conn)
         }
       }
+
+      ws.on('error', function(e) {
+        console.log('Client error: %s', e.message);
+      });
     });
     console.log(
       'Socket server running at ws://' + this.host + ':' + this.port + ' ...'
