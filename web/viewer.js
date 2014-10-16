@@ -1,6 +1,8 @@
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 /* Copyright 2012 Mozilla Foundation
+ * Copyright 2014 Harshavardhana <harsha@harshavardhana.net> - ``qed`` specific
+ * changes
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -5396,10 +5398,12 @@ var DocumentAttachmentsView = function documentAttachmentsView(attachments) {
 };
 
 function setCookie() {
-  var viewer = docCookies.getItem("viewer");
+  var viewer = cookie.get('viewer');
   if (viewer === null) {
     viewer = prompt("Please enter project number or cancel", "presenter");
-    docCookies.setItem("viewer", viewer, Infinity);
+    cookie.set('viewer', viewer, {
+        expires: 3650, //expires in 10yrs
+          });
   }
   return viewer;
 }
@@ -5720,7 +5724,7 @@ window.addEventListener('change', function webViewerChange(evt) {
   }
   var file = files[0];
 
-  WS.sendFile(file, docCookies.getItem("viewer"));
+  WS.sendFile(file, cookie.get('viewer'));
   /*
   // Commented out blob URL since we need binary data
   if (!PDFJS.disableCreateObjectURL &&
@@ -5875,7 +5879,7 @@ window.addEventListener('click', function click(evt) {
 }, false);
 
 window.addEventListener('keydown', function keydown(evt) {
-    WS.sendKeyStroke(evt, docCookies.getItem("viewer"));
+    WS.sendKeyStroke(evt, cookie.get('viewer'));
 }, true);
 
 //A key is pressed down.
