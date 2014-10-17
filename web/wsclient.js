@@ -17,7 +17,7 @@
 
 var config = {}
 config.ws = {}
-config.ws.host = "localhost";
+config.ws.host = window.location.hostname;
 config.ws.port = 4002;
 
 var WS = {

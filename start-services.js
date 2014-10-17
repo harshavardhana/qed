@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Hyperbotics.org
+#!/usr/bin/env node
+/* Copyright 2014 Harshavardhana <harsha@harshavardhana.net>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-'use strict';
+'use script';
 
-require('shelljs/make');
 var path = require('path');
 var fs = require('fs');
-
-var ROOT_DIR = __dirname + '/'; // absolute path to project's root
-
-target.server = function() {
-  cd(ROOT_DIR);
-  echo();
-  echo('### Starting local server');
-
+var config = require('config-ini');
+config.load(function (err) {
+  if (err) {
+    throw new Error(err); // File not found
+  }
+  console.log('### Starting local server ');
   var WebServer = require('./server/http-server');
   var SocketServer = require('./server/ws-server');
   var server = new WebServer();
-  var wsocket = new SocketServer();
-  server.port = 4001;
-  wsocket.port = 4002;
-  server.root = "web";
-  wsocket.root = "web";
+  var socket = new SocketServer();
+
+  server.root = config.server.root;
+  socket.root = config.socket.root;
+  server.host = config.server.host;
+  socket.host = config.socket.host;
+  server.port = config.server.port;
+  socket.port = config.socket.port;
+
   server.start();
-  wsocket.init();
-  wsocket.start();
-};
+  socket.init();
+  socket.start();
+});
