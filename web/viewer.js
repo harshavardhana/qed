@@ -5399,7 +5399,7 @@ var DocumentAttachmentsView = function documentAttachmentsView(attachments) {
 
 function setCookie() {
   var viewer = cookie.get('viewer');
-  if (viewer === null) {
+  if (typeof viewer == 'undefined') {
     viewer = prompt("Please enter project number or cancel", "presenter");
     cookie.set('viewer', viewer, {
         expires: 3650, //expires in 10yrs
