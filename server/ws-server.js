@@ -99,7 +99,7 @@ WebSocketServer.prototype = {
         var i = 0;
         var tot = 0;
         for (tot=_this.clients.length; i < tot; i++) {
-          if (typeof _this.clients[i].conn !== 'undefined') {
+          if (typeof _this.clients[i] !== 'undefined') {
             if (_this.clients[i].conn === ws)
               _this.clients.splice(i, 1);
           }
@@ -110,8 +110,10 @@ WebSocketServer.prototype = {
         var i = 0;
         var tot = 0;
         for (tot=_this.clients.length; i < tot; i++) {
-          if (_this.clients[i].conn !== 'undefined')
-            send_message_data (data, _this.clients[i].conn)
+	  if (typeof _this.clients[i] !== 'undefined') {
+            if (typeof _this.clients[i].conn !== 'undefined')
+               send_message_data (data, _this.clients[i].conn)
+          }
         }
       }
 
