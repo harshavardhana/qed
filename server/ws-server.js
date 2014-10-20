@@ -74,6 +74,9 @@ WebSocketServer.prototype = {
             } else if (message.event == 'key') {
               send_message_all_clients(JSON.stringify({event: 'key',
                                                        keyevent: message.keyevent}));
+            } else if (message.event == 'zoom') {
+	      send_message_all_clients(JSON.stringify({event: 'zoom',
+                                                       clickevent: message.clickevent}));
             }
           }
         } else {

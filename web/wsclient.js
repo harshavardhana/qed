@@ -55,10 +55,18 @@ var WS = {
         event.pdfpath = data.path;
         window.dispatchEvent(event);
       } else if (data.event == 'key') {
+        // Handle generic keypressed event
         var event = document.createEvent('UIEvents');
         event.initUIEvent('keypressedremote', false, true, window, 0);
         event.keyevent = data.keyevent;
         window.dispatchEvent(event);
+        // Handle zoom click event
+      } else if (data.event == 'zoom') {
+        if (data.clickevent == 'zoomIn') {
+          PDFView.zoomIn();
+        } else if (data.clickevent == 'zoomOut') {
+          PDFView.zoomOut();
+        }
       }
     });
   },
@@ -83,6 +91,15 @@ var WS = {
                                  (keyevent.altKey ? 2 : 0) |
                                  (keyevent.shiftKey ? 4 : 0) |
                                  (keyevent.metaKey ? 8 : 0));
+    this.client.send(JSON.stringify(this.message));
+  },
+  sendMouseClick: function(clickAction, viewer) {
+    if (this.client.readyState != WebSocket.OPEN)
+      throw new Error('Not connected');
+    this.message.clientType = viewer;
+    this.message.fname = null;
+    this.message.event = 'zoom';
+    this.message.clickevent = clickAction;
     this.client.send(JSON.stringify(this.message));
   }
 };

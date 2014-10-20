@@ -1,8 +1,7 @@
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 /* Copyright 2012 Mozilla Foundation
- * Copyright 2014 Harshavardhana <harsha@harshavardhana.net> - ``qed`` specific
- * changes
+ * Copyright 2014 Harshavardhana ``qed`` specific changes
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -5570,12 +5569,12 @@ function webViewerInitialized() {
 
   document.getElementById('zoomIn').addEventListener('click',
     function() {
-      PDFView.zoomIn();
+      WS.sendMouseClick("zoomIn", cookie.get("viewer"));
     });
 
   document.getElementById('zoomOut').addEventListener('click',
-    function() {
-      PDFView.zoomOut();
+    function(evt) {
+      WS.sendMouseClick("zoomOut", cookie.get("viewer"));
     });
 
   document.getElementById('pageNumber').addEventListener('click',
