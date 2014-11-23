@@ -1,9 +1,0 @@
-[server]
-port = 4001
-root = web
-host = 0.0.0.0
-
-[socket]
-port = 4002
-root = web
-host = 0.0.0.0

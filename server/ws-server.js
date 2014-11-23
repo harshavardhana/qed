@@ -91,13 +91,13 @@ WebSocketServer.prototype = {
             if (message.event == 'init') {
               if (isEmptyObj(_this.pobject))
                 throw new errors.ServerException("Empty object");
-              var projector = iptoProjector(_this.pobject.projectors,
-                                            remoteaddress)
+              var projector = iptoProjector(_this.pobject, remoteaddress)
               _this.clients.push({
                 type: projector,
                 conn: ws,
                 address: remoteaddress,
               });
+              console.log(_this.clients);
             } else if (message.event == 'key') {
               send_message_all_clients(JSON.stringify({event: 'key',
                                                        keyevent: message.keyevent}));

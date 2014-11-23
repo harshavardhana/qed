@@ -5,9 +5,11 @@ QED
 
     # cd qed.git
 
-    # npm install -g shelljs
+    ... Make config changes ...
 
-    # node make server
+    # npm install -g
+
+    # /usr/local/lib/node_modules/qed/start-services.js
 
     ### Starting local server
     Web server running at http://localhost:4001/

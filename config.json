@@ -1,0 +1,17 @@
+{
+  "server": {
+    "port": 4001,
+    "root": "web",
+    "host": "0.0.0.0"
+  },
+  "socket": {
+    "port": 4002,
+    "root": "web",
+    "host": "0.0.0.0"
+  },
+  "projectors": {
+    "projector1": "10.0.0.51",
+    "projector2": "10.0.0.52",
+    "projector3": "10.0.0.53"
+  }
+}

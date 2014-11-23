@@ -1,0 +1,22 @@
+{
+  "name": "qed",
+  "version": "1.0.0",
+  "description": "Software Defined Projectors",
+  "main": "start-services.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/harshavardhana/qed.git"
+  },
+  "author": "Harshavardhana",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/harshavardhana/qed/issues"
+  },
+  "homepage": "https://github.com/harshavardhana/qed",
+  "dependencies": {
+    "ws": "^0.5.0"
+  }
+}
