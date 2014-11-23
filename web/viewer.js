@@ -5408,10 +5408,9 @@ function setCookie() {
 }
 
 function webViewerLoad(evt) {
-  var viewer = setCookie();
-  console.log(viewer);
+  //var viewer = setCookie();
   PDFView.initialize().then(webViewerInitialized);
-  WS.start(viewer);
+  WS.start();
 }
 
 function webViewerInitialized() {
@@ -5723,7 +5722,7 @@ window.addEventListener('change', function webViewerChange(evt) {
   }
   var file = files[0];
 
-  WS.sendFile(file, cookie.get('viewer'));
+  WS.sendFile(file);
   /*
   // Commented out blob URL since we need binary data
   if (!PDFJS.disableCreateObjectURL &&
@@ -5878,7 +5877,7 @@ window.addEventListener('click', function click(evt) {
 }, false);
 
 window.addEventListener('keydown', function keydown(evt) {
-    WS.sendKeyStroke(evt, cookie.get('viewer'));
+    WS.sendKeyStroke(evt);
 }, true);
 
 //A key is pressed down.

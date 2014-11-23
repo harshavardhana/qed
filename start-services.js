@@ -53,7 +53,6 @@ config.load(function (err) {
   server.port = config.server.port;
   socket.port = config.socket.port;
   socket.pobject = pObj; /* Projector list */
-
   server.start();
   socket.init();
   socket.start();

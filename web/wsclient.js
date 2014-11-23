@@ -26,7 +26,7 @@ var WS = {
   client: null,
   message: {},
 
-  start: function (viewer) {
+  start: function () {
     var serverHost = 'ws://' + this.host + ':' + this.port;
     this.client = new WebSocket(serverHost);
     var _this = this;
@@ -35,7 +35,6 @@ var WS = {
       if (_this.client.readyState != WebSocket.OPEN)
         throw new Error('Not connected');
       var message = {
-        clientType: viewer,
         fname: null,
         event: 'init'
       };
@@ -70,19 +69,17 @@ var WS = {
       }
     });
   },
-  sendFile: function(file, viewer) {
+  sendFile: function(file) {
     if (this.client.readyState != WebSocket.OPEN)
       throw new Error('Not connected');
-    this.message.clientType = viewer;
     this.message.fname = file.name;
     this.message.event = 'pdf';
     this.client.send(JSON.stringify(this.message));
     this.client.send(file);
   },
-  sendKeyStroke: function(keyevent, viewer) {
+  sendKeyStroke: function(keyevent) {
     if (this.client.readyState != WebSocket.OPEN)
       throw new Error('Not connected');
-    this.message.clientType = viewer;
     this.message.fname = null;
     this.message.event = 'key';
     this.message.keyevent = {};
@@ -93,10 +90,9 @@ var WS = {
                                  (keyevent.metaKey ? 8 : 0));
     this.client.send(JSON.stringify(this.message));
   },
-  sendMouseClick: function(clickAction, viewer) {
+  sendMouseClick: function(clickAction) {
     if (this.client.readyState != WebSocket.OPEN)
       throw new Error('Not connected');
-    this.message.clientType = viewer;
     this.message.fname = null;
     this.message.event = 'zoom';
     this.message.clickevent = clickAction;

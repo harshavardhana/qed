@@ -36,13 +36,31 @@ function send_message_data(data, client) {
   client.send (data);
 }
 
-Object.prototype.isEmpty = function() {
-  for (var prop in this) {
-    if (this.hasOwnProperty(prop))
-      return false;
+function isEmptyObj(obj) {
+  for (var key in obj) {
+    return false;
   }
   return true;
-};
+}
+
+function iptoProjector(obj, address) {
+  for (var key in obj) {
+    switch (address) {
+    case key.projector1:
+      return "projector1";
+    case key.projector2:
+      return "projector2";
+    case key.projector3:
+      return "projector3";
+    default:
+      return "presenter";
+    }
+  }
+}
+
+function ProjectorToPage(obj) {
+  //
+}
 
 WebSocketServer.prototype = {
   init: function() {
@@ -63,15 +81,22 @@ WebSocketServer.prototype = {
       // keep clients list for future use
       var message = null;
       ws.on('message', function(data, flags) {
+        if (isEmptyObj(ws.upgradeReq))
+          throw new errors.ServerException("Corrupted object");
+        var remoteaddress = ws.upgradeReq.connection.remoteAddress;
         // if PDF data check to break out
         if (!flags.binary) {
           message = JSON.parse(data);
           if (message.fname == null) {
             if (message.event == 'init') {
+              if (isEmptyObj(_this.pobject))
+                throw new errors.ServerException("Empty object");
+              var projector = iptoProjector(_this.pobject.projectors,
+                                            remoteaddress)
               _this.clients.push({
-                type: message.clientType,
+                type: projector,
                 conn: ws,
-                address: ws.upgradeReq.connection.remoteAddress,
+                address: remoteaddress,
               });
             } else if (message.event == 'key') {
               send_message_all_clients(JSON.stringify({event: 'key',
