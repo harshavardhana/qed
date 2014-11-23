@@ -14,3 +14,5 @@ QED
     ### Starting local server
     Web server running at http://localhost:4001/
     Socket server running at ws://localhost:4002 ...
+    Uploaded files will be saved to web/uploaded
+    Remember to wipe this directory if you upload lots and lots.
