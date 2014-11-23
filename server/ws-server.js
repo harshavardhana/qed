@@ -29,9 +29,9 @@ function WebSocketServer() {
 }
 
 function send_message_data(data, client) {
+  // ArrayBuffer is automatically discovered and set
   if (!data)
     throw new errors.ServerException("Invalid data");
-  // ArrayBuffer is automatically discovered and set
   client.send (data);
 }
 
