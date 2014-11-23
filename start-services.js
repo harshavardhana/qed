@@ -19,6 +19,23 @@
 var path = require('path');
 var fs = require('fs');
 var config = require('config-ini');
+var filename = "projectors.json";
+var pObj;
+
+function readProjectorConfig(filename, callback) {
+  fs.readFile(filename, function (err, data) {
+    if (err)
+      throw new Error(err);
+    if (typeof data === 'undefined')
+      throw new Error("Invalid data");
+    callback(null, data);
+  });
+}
+
+readProjectorConfig(filename, function (err, data) {
+  pObj = JSON.parse(data);
+});
+
 config.load(function (err) {
   if (err) {
     throw new Error(err); // File not found
@@ -35,6 +52,7 @@ config.load(function (err) {
   socket.host = config.socket.host;
   server.port = config.server.port;
   socket.port = config.socket.port;
+  socket.pobject = pObj; /* Projector list */
 
   server.start();
   socket.init();

@@ -26,6 +26,7 @@ function WebSocketServer() {
   this.wsserver = null;
   this.root = ".";
   this.clients = [];
+  this.pobject = null;
 }
 
 function send_message_data(data, client) {
@@ -70,6 +71,7 @@ WebSocketServer.prototype = {
               _this.clients.push({
                 type: message.clientType,
                 conn: ws,
+                address: ws.upgradeReq.connection.remoteAddress,
               });
             } else if (message.event == 'key') {
               send_message_all_clients(JSON.stringify({event: 'key',
