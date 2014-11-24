@@ -68,6 +68,11 @@ var WS = {
         }
       } else if (data.event == 'select') {
         PDFView.setScale(data.scale);
+      } else if (data.event == 'pagenumber') {
+        PDFView.page = (data.pagenumber | 0);
+        if (data.pagenumber !== (data.pagenumber | 0).toString()) {
+          data.pagenumber = PDFView.page;
+        }
       }
     });
   },
@@ -106,6 +111,15 @@ var WS = {
     this.message.fname = null;
     this.message.event = 'select';
     this.message.scale = value;
+    this.client.send(JSON.stringify(this.message));
+  },
+  sendPageNumber: function(value) {
+    if (this.client.readyState != WebSocket.OPEN)
+      throw new Error('Not connected');
+    this.message.fname = null;
+    // Handle the user inputting a floating point number.
+    this.message.event = 'pagenumber';
+    this.message.pagenumber = value;
     this.client.send(JSON.stringify(this.message));
   }
 };

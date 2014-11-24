@@ -5583,12 +5583,7 @@ function webViewerInitialized() {
 
   document.getElementById('pageNumber').addEventListener('change',
     function() {
-      // Handle the user inputting a floating point number.
-      PDFView.page = (this.value | 0);
-
-      if (this.value !== (this.value | 0).toString()) {
-        this.value = PDFView.page;
-      }
+      WS.sendPageNumber(this.value);
     });
 
   document.getElementById('scaleSelect').addEventListener('change',
