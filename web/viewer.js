@@ -5688,7 +5688,7 @@ function updateViewarea() {
     });
   });
   var href = PDFView.getAnchorUrl(pdfOpenParams);
-  document.getElementById('viewBookmark').href = href;
+  //document.getElementById('viewBookmark').href = href;
   document.getElementById('secondaryViewBookmark').href = href;
 
   // Update the current bookmark in the browsing history.
@@ -5696,13 +5696,16 @@ function updateViewarea() {
 }
 
 window.addEventListener('resize', function webViewerResize(evt) {
+    /*
   if (PDFView.initialized &&
       (document.getElementById('pageWidthOption').selected ||
        document.getElementById('pageFitOption').selected ||
        document.getElementById('pageAutoOption').selected)) {
     PDFView.setScale(document.getElementById('scaleSelect').value);
-  }
-  updateViewarea();
+    }*/
+    if (PDFView.initialized)
+      PDFView.setScale(document.getElementById('scaleSelect').value);
+    updateViewarea();
 
   // Set the 'max-height' CSS property of the secondary toolbar.
   SecondaryToolbar.setMaxHeight(PDFView.container);
@@ -5743,10 +5746,10 @@ window.addEventListener('change', function webViewerChange(evt) {
   PDFView.setTitleUsingUrl(file.name);
 
   // URL does not reflect proper document location - hiding some icons.
-  document.getElementById('viewBookmark').setAttribute('hidden', 'true');
+  //document.getElementById('viewBookmark').setAttribute('hidden', 'true');
   document.getElementById('secondaryViewBookmark').
     setAttribute('hidden', 'true');
-  document.getElementById('download').setAttribute('hidden', 'true');
+  //document.getElementById('download').setAttribute('hidden', 'true');
   document.getElementById('secondaryDownload').setAttribute('hidden', 'true');
 }, true);
 
@@ -5793,8 +5796,8 @@ window.addEventListener('scalechange', function scalechange(evt) {
   document.getElementById('zoomIn').disabled = (evt.scale === MAX_SCALE);
 
   var customScaleOption = document.getElementById('customScaleOption');
-  customScaleOption.selected = false;
-
+  // customScaleOption.selected = false;
+  /*
   if (!evt.resetAutoSettings &&
       (document.getElementById('pageWidthOption').selected ||
        document.getElementById('pageFitOption').selected ||
@@ -5802,12 +5805,19 @@ window.addEventListener('scalechange', function scalechange(evt) {
     updateViewarea();
     return;
   }
+  */
+  if (!evt.resetAutoSettings) {
+    updateViewarea();
+    return;
+  }
 
   var predefinedValueFound = selectScaleOption('' + evt.scale);
+  /*
   if (!predefinedValueFound) {
     customScaleOption.textContent = Math.round(evt.scale * 10000) / 100 + '%';
     customScaleOption.selected = true;
   }
+  */
   updateViewarea();
 }, true);
 

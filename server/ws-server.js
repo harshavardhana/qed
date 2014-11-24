@@ -44,18 +44,21 @@ function isEmptyObj(obj) {
 }
 
 function iptoProjector(obj, address) {
-  for (var key in obj) {
-    switch (address) {
-    case key.projector1:
-      return "projector1";
-    case key.projector2:
-      return "projector2";
-    case key.projector3:
-      return "projector3";
-    default:
-      return "presenter";
-    }
+  var projector = "";
+  switch (address) {
+  case obj.projector1:
+    projector = "projector1";
+    break;
+  case obj.projector2:
+    projector = "projector2";
+    break;
+  case obj.projector3:
+    projector = "projector3";
+    break;
+  default:
+    projector = "presenter";
   }
+  return projector;
 }
 
 function ProjectorToPage(obj) {
@@ -97,13 +100,25 @@ WebSocketServer.prototype = {
                 conn: ws,
                 address: remoteaddress,
               });
-              console.log(_this.clients);
             } else if (message.event == 'key') {
-              send_message_all_clients(JSON.stringify({event: 'key',
-                                                       keyevent: message.keyevent}));
+              var data = JSON.stringify({event: 'key',
+                                         keyevent: message.keyevent});
+              var i = 0;
+              var tot = 0;
+              for (tot=_this.clients.length; i < tot; i++) {
+	        if (typeof _this.clients[i] !== 'undefined') {
+                  if (typeof _this.clients[i].conn !== 'undefined') {
+                    if (_this.clients[i].type == 'projector2' ||
+                        _this.clients[i].type == 'presenter') {
+                      send_message_data(data, _this.clients[i].conn);
+                    }
+                  }
+                }
+              }
             } else if (message.event == 'zoom') {
-	      send_message_all_clients(JSON.stringify({event: 'zoom',
-                                                       clickevent: message.clickevent}));
+              var data = JSON.stringify({event: 'zoom',
+                                         clickevent: message.clickevent});
+              send_message_all_clients(data);
             }
           }
         } else {
