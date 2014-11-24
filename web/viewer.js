@@ -5568,12 +5568,12 @@ function webViewerInitialized() {
 
   document.getElementById('zoomIn').addEventListener('click',
     function() {
-      WS.sendMouseClick("zoomIn", cookie.get("viewer"));
+      WS.sendMouseClick("zoomIn");
     });
 
   document.getElementById('zoomOut').addEventListener('click',
-    function(evt) {
-      WS.sendMouseClick("zoomOut", cookie.get("viewer"));
+    function() {
+      WS.sendMouseClick("zoomOut");
     });
 
   document.getElementById('pageNumber').addEventListener('click',
@@ -5593,7 +5593,7 @@ function webViewerInitialized() {
 
   document.getElementById('scaleSelect').addEventListener('change',
     function() {
-      PDFView.setScale(this.value);
+      WS.sendMouseSelect(this.value);
     });
 
   document.getElementById('presentationMode').addEventListener('click',

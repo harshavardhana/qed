@@ -119,6 +119,10 @@ WebSocketServer.prototype = {
               var data = JSON.stringify({event: 'zoom',
                                          clickevent: message.clickevent});
               send_message_all_clients(data);
+            } else if (message.event == 'select') {
+              var data = JSON.stringify({event: 'select',
+                                         scale: message.scale});
+              send_message_all_clients(data);
             }
           }
         } else {

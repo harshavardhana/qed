@@ -66,6 +66,8 @@ var WS = {
         } else if (data.clickevent == 'zoomOut') {
           PDFView.zoomOut();
         }
+      } else if (data.event == 'select') {
+        PDFView.setScale(data.scale);
       }
     });
   },
@@ -96,6 +98,14 @@ var WS = {
     this.message.fname = null;
     this.message.event = 'zoom';
     this.message.clickevent = clickAction;
+    this.client.send(JSON.stringify(this.message));
+  },
+  sendMouseSelect: function(value) {
+    if (this.client.readyState != WebSocket.OPEN)
+      throw new Error('Not connected');
+    this.message.fname = null;
+    this.message.event = 'select';
+    this.message.scale = value;
     this.client.send(JSON.stringify(this.message));
   }
 };
