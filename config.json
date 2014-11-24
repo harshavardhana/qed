@@ -10,7 +10,7 @@
     "host": "0.0.0.0"
   },
   "projectors": {
-    "projector1": "10.0.0.51",
+    "projector1": "10.0.0.25",
     "projector2": "10.0.0.5",
     "projector3": "10.0.0.53"
   }
