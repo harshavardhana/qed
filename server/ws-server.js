@@ -76,113 +76,117 @@ WebSocketServer.prototype = {
   },
   start: function (callback) {
     this.wsserver = new wsocket({host: this.host,
-                                 port: this.port,
-                                 clientTracking: false,
-                                 callback: callback});
+				 port: this.port,
+				 clientTracking: false,
+				 callback: callback});
     var _this = this;
     this.wsserver.on('connection', function(ws) {
       // keep clients list for future use
       var message = null;
       ws.on('message', function(data, flags) {
-        if (isEmptyObj(ws.upgradeReq))
-          throw new errors.ServerException("Corrupted object");
-        var remoteaddress = ws.upgradeReq.connection.remoteAddress;
-        // if PDF data check to break out
-        if (!flags.binary) {
-          message = JSON.parse(data);
-          if (message.fname == null) {
-            if (message.event == 'init') {
-              if (isEmptyObj(_this.pobject))
-                throw new errors.ServerException("Empty object");
-              var projector = iptoProjector(_this.pobject, remoteaddress)
-              _this.clients.push({
-                type: projector,
-                conn: ws,
-                address: remoteaddress,
-              });
-            } else if (message.event == 'key') {
-              var data = JSON.stringify({event: 'key',
-                                         keyevent: message.keyevent});
-              var i = 0;
-              var tot = 0;
-              for (tot=_this.clients.length; i < tot; i++) {
-	        if (typeof _this.clients[i] !== 'undefined') {
-                  if (typeof _this.clients[i].conn !== 'undefined') {
-                    if (_this.clients[i].type == 'projector2' ||
-                        _this.clients[i].type == 'presenter') {
-                      send_message_data(data, _this.clients[i].conn);
-                    }
-                  }
-                }
-              }
-            } else if (message.event == 'zoom') {
-              var data = JSON.stringify({event: 'zoom',
-                                         clickevent: message.clickevent});
-              send_message_all_clients(data);
-            } else if (message.event == 'select') {
-              var data = JSON.stringify({event: 'select',
-                                         scale: message.scale});
-              send_message_all_clients(data);
-            } else if (message.event == 'pagenumber') {
-              var data = JSON.stringify({event: 'pagenumber',
-                                         pagenumber: message.pagenumber});
-              var i = 0;
-              var tot = 0;
-              for (tot=_this.clients.length; i < tot; i++) {
-	        if (typeof _this.clients[i] !== 'undefined') {
-                  if (typeof _this.clients[i].conn !== 'undefined') {
-                    if (_this.clients[i].type == 'projector2' ||
-                        _this.clients[i].type == 'presenter') {
-                      send_message_data(data, _this.clients[i].conn);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        } else {
-          var fname = _this.root + '/uploaded/' + message.fname;
-          var replyfname = '/uploaded/' + message.fname;
-          fs.writeFile(fname, data, function(error) {
-            if (error) {
-              console.log(error);
-              send_message_all_clients(JSON.stringify({event: 'error',
-                                                       path: replyfname,
-                                                       message: error.message}));
-              return;
-            } else {
-              send_message_all_clients(JSON.stringify({event: 'complete',
-                                                       path: replyfname}));
-              message = null;
-            }
-          });
-        }
+	if (isEmptyObj(ws.upgradeReq))
+	  throw new errors.ServerException("Corrupted object");
+	var remoteaddress = ws.upgradeReq.connection.remoteAddress;
+	// if PDF data check to break out
+	if (!flags.binary) {
+	  message = JSON.parse(data);
+	  if (message.fname == null) {
+	    if (message.event == 'init') {
+	      if (isEmptyObj(_this.pobject))
+		throw new errors.ServerException("Empty object");
+	      var projector = iptoProjector(_this.pobject, remoteaddress)
+	      _this.clients.push({
+		type: projector,
+		conn: ws,
+		address: remoteaddress,
+	      });
+	    } else if (message.event == 'key') {
+	      var data = JSON.stringify({event: 'key',
+					 keyevent: message.keyevent});
+	      /*
+	      var i = 0;
+	      var tot = 0;
+	      for (tot=_this.clients.length; i < tot; i++) {
+		if (typeof _this.clients[i] !== 'undefined') {
+		  if (typeof _this.clients[i].conn !== 'undefined') {
+		    if (_this.clients[i].type == 'projector2' ||
+			_this.clients[i].type == 'presenter') {
+		      send_message_data(data, _this.clients[i].conn);
+		    }
+		  }
+		}
+	      } */
+	      send_message_all_clients(data);
+	    } else if (message.event == 'zoom') {
+	      var data = JSON.stringify({event: 'zoom',
+					 clickevent: message.clickevent});
+	      send_message_all_clients(data);
+	    } else if (message.event == 'select') {
+	      var data = JSON.stringify({event: 'select',
+					 scale: message.scale});
+	      send_message_all_clients(data);
+	    } else if (message.event == 'pagenumber') {
+	      var data = JSON.stringify({event: 'pagenumber',
+					 pagenumber: message.pagenumber});
+	      /*
+	      var i = 0;
+	      var tot = 0;
+	      for (tot=_this.clients.length; i < tot; i++) {
+		if (typeof _this.clients[i] !== 'undefined') {
+		  if (typeof _this.clients[i].conn !== 'undefined') {
+		    if (_this.clients[i].type == 'projector2' ||
+			_this.clients[i].type == 'presenter') {
+		      send_message_data(data, _this.clients[i].conn);
+		    }
+		  }
+		}
+	      } */
+	      send_message_all_clients(data);
+	    }
+	  }
+	} else {
+	  var fname = _this.root + '/uploaded/' + message.fname;
+	  var replyfname = '/uploaded/' + message.fname;
+	  fs.writeFile(fname, data, function(error) {
+	    if (error) {
+	      console.log(error);
+	      send_message_all_clients(JSON.stringify({event: 'error',
+						       path: replyfname,
+						       message: error.message}));
+	      return;
+	    } else {
+	      send_message_all_clients(JSON.stringify({event: 'complete',
+						       path: replyfname}));
+	      message = null;
+	    }
+	  });
+	}
       });
 
       ws.on('close', function() {
-        var i = 0;
-        var tot = 0;
-        for (tot=_this.clients.length; i < tot; i++) {
-          if (typeof _this.clients[i] !== 'undefined') {
-            if (_this.clients[i].conn === ws)
-              _this.clients.splice(i, 1);
-          }
-        }
+	var i = 0;
+	var tot = 0;
+	for (tot=_this.clients.length; i < tot; i++) {
+	  if (typeof _this.clients[i] !== 'undefined') {
+	    if (_this.clients[i].conn === ws)
+	      _this.clients.splice(i, 1);
+	  }
+	}
       });
 
       function send_message_all_clients(data) {
-        var i = 0;
-        var tot = 0;
-        for (tot=_this.clients.length; i < tot; i++) {
+	var i = 0;
+	var tot = 0;
+	for (tot=_this.clients.length; i < tot; i++) {
 	  if (typeof _this.clients[i] !== 'undefined') {
-            if (typeof _this.clients[i].conn !== 'undefined')
-               send_message_data (data, _this.clients[i].conn)
-          }
-        }
+	    if (typeof _this.clients[i].conn !== 'undefined')
+	       send_message_data (data, _this.clients[i].conn)
+	  }
+	}
       }
 
       ws.on('error', function(e) {
-        console.log('Client error: %s', e.message);
+	console.log('Client error: %s', e.message);
       });
     });
     console.log(
