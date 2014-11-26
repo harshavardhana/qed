@@ -65,7 +65,7 @@
         /** Whether this instance should log debug messages. */
         this.debug = false;
         /** The number of milliseconds to delay before attempting to reconnect. */
-        this.reconnectInterval = 1000;
+        this.reconnectInterval = 2000;
         /** The rate of increase of the reconnect delay. Allows reconnect attempts to back off when problems persist. */
         this.reconnectDecay = 1.5;
         /** The number of attempted reconnects since starting, or the last successful connection. */
