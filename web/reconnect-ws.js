@@ -40,7 +40,7 @@
  *  onopen  // sometime later...
  *  onmessage
  *  onmessage
- *  etc... 
+ *  etc...
  *
  * It is API compatible with the standard WebSocket API, apart from the following members:
  *
@@ -60,12 +60,10 @@
         global.ReconnectingWebSocket = factory();
     }
 })(this, function () {
-
     function ReconnectingWebSocket(url, protocols) {
         // These can be altered by calling code.
-
         /** Whether this instance should log debug messages. */
-        this.debug = false;
+        this.debug = true;
         /** The number of milliseconds to delay before attempting to reconnect. */
         this.reconnectInterval = 1000;
         /** The rate of increase of the reconnect delay. Allows reconnect attempts to back off when problems persist. */
@@ -124,7 +122,7 @@
             if (self.debug || ReconnectingWebSocket.debugAll) {
                 console.debug('ReconnectingWebSocket', 'attempt-connect', url);
             }
-            
+
             var localWs = ws;
             var timeout = setTimeout(function() {
                 if (self.debug || ReconnectingWebSocket.debugAll) {
@@ -134,7 +132,7 @@
                 localWs.close();
                 timedOut = false;
             }, self.timeoutInterval);
-            
+
             ws.onopen = function(event) {
                 clearTimeout(timeout);
                 if (self.debug || ReconnectingWebSocket.debugAll) {
@@ -148,7 +146,7 @@
                 reconnectAttempt = false;
                 eventTarget.dispatchEvent(e);
             };
-            
+
             ws.onclose = function(event) {
                 clearTimeout(timeout);
                 ws = null;

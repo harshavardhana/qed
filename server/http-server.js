@@ -2,7 +2,7 @@
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 /*
  * Copyright 2014 Mozilla Foundation
- * Copyright 2014 Harshavardhana <harsha@harshavardhana.net> - Addional changes
+ * Copyright 2014 Harshavardhana - QED related changes
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
