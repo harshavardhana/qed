@@ -61,10 +61,6 @@ function iptoProjector(obj, address) {
   return projector;
 }
 
-function ProjectorToPage(obj) {
-  //
-}
-
 WebSocketServer.prototype = {
   init: function() {
     var uploaddir = this.root + '/uploaded';
@@ -100,22 +96,12 @@ WebSocketServer.prototype = {
 		conn: ws,
 		address: remoteaddress,
 	      });
+              var data = JSON.stringify({event: 'init',
+                                         viewer: projector});
+              send_message_data(data, ws);
 	    } else if (message.event == 'key') {
 	      var data = JSON.stringify({event: 'key',
 					 keyevent: message.keyevent});
-	      /*
-	      var i = 0;
-	      var tot = 0;
-	      for (tot=_this.clients.length; i < tot; i++) {
-		if (typeof _this.clients[i] !== 'undefined') {
-		  if (typeof _this.clients[i].conn !== 'undefined') {
-		    if (_this.clients[i].type == 'projector2' ||
-			_this.clients[i].type == 'presenter') {
-		      send_message_data(data, _this.clients[i].conn);
-		    }
-		  }
-		}
-	      } */
 	      send_message_all_clients(data);
 	    } else if (message.event == 'zoom') {
 	      var data = JSON.stringify({event: 'zoom',
@@ -128,19 +114,6 @@ WebSocketServer.prototype = {
 	    } else if (message.event == 'pagenumber') {
 	      var data = JSON.stringify({event: 'pagenumber',
 					 pagenumber: message.pagenumber});
-	      /*
-	      var i = 0;
-	      var tot = 0;
-	      for (tot=_this.clients.length; i < tot; i++) {
-		if (typeof _this.clients[i] !== 'undefined') {
-		  if (typeof _this.clients[i].conn !== 'undefined') {
-		    if (_this.clients[i].type == 'projector2' ||
-			_this.clients[i].type == 'presenter') {
-		      send_message_data(data, _this.clients[i].conn);
-		    }
-		  }
-		}
-	      } */
 	      send_message_all_clients(data);
 	    }
 	  }

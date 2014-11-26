@@ -41,38 +41,60 @@ var WS = {
       _this.client.send(JSON.stringify(message));
     });
     this.client.addEventListener('close', function(event) {
+      cookie.remove('viewer');
       console.log('disconnected');
     });
     this.client.addEventListener('message', function(event) {
       var data = JSON.parse(event.data);
-      if (data.event == 'error') {
-        throw new Error('Server reported send error for file ' + data.path);
-      } else if (data.event == 'complete') {
+      switch (data.event) {
+      case 'init':
+        if (data.viewer !== 'undefined') {
+          cookie.set('viewer', data.viewer, {
+            expires: 3650, //expires in 10yrs
+          });
+        }
+        break;
+      case 'complete':
         console.log('Server reported send file: ' + data.path + ' Success');
         var event = document.createEvent('UIEvents');
         event.initUIEvent('openpdf', false, false, window, 0);
         event.pdfpath = data.path;
         window.dispatchEvent(event);
-      } else if (data.event == 'key') {
+        break;
+      case 'key':
         // Handle generic keypressed event
         var event = document.createEvent('UIEvents');
         event.initUIEvent('keypressedremote', false, true, window, 0);
         event.keyevent = data.keyevent;
         window.dispatchEvent(event);
+        break;
+      case 'zoom':
         // Handle zoom click event
-      } else if (data.event == 'zoom') {
         if (data.clickevent == 'zoomIn') {
           PDFView.zoomIn();
         } else if (data.clickevent == 'zoomOut') {
           PDFView.zoomOut();
         }
-      } else if (data.event == 'select') {
+        break;
+      case 'select':
         PDFView.setScale(data.scale);
-      } else if (data.event == 'pagenumber') {
-        PDFView.page = (data.pagenumber | 0);
-        if (data.pagenumber !== (data.pagenumber | 0).toString()) {
-          data.pagenumber = PDFView.page;
-        }
+        break;
+      case 'pagenumber':
+        // Handle generic pagenumber event
+        var event = document.createEvent('UIEvents');
+        event.initUIEvent('pagenumber', false, true, window, 0);
+        event.pagenumber = data.pagenumber;
+        window.dispatchEvent(event);
+        break;
+      case 'error':
+        PDFView.cleanup();
+        cookie.remove('viewer');
+        throw new Error('Server reported send error for file ' + data.path);
+        break;
+      default:
+        PDFView.cleanup();
+        cookie.remove('viewer');
+        throw new Error("Invalid unrecognized event");
       }
     });
   },

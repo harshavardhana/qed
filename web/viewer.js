@@ -5597,11 +5597,6 @@ function webViewerInitialized() {
   document.getElementById('openFile').addEventListener('click',
     SecondaryToolbar.openFileClick.bind(SecondaryToolbar));
 
-  document.getElementById('print').addEventListener('click',
-    SecondaryToolbar.printClick.bind(SecondaryToolbar));
-
-  document.getElementById('download').addEventListener('click',
-    SecondaryToolbar.downloadClick.bind(SecondaryToolbar));
 }
 
 document.addEventListener('DOMContentLoaded', webViewerLoad, true);
@@ -5885,6 +5880,37 @@ window.addEventListener('keydown', function keydown(evt) {
     WS.sendKeyStroke(evt);
 }, true);
 
+window.addEventListener('pagenumber', function pagenumber(data) {
+  var viewer = cookie.get('viewer');
+  switch (viewer) {
+  case 'projector1':
+    PDFView.page = (data.pagenumber | 0);
+    if (data.pagenumber !== (data.pagenumber | 0).toString()) {
+      data.pagenumber = PDFView.page;
+    }
+    break;
+  case 'projector2':
+    PDFView.page = (data.pagenumber | 0);
+    if (data.pagenumber !== (data.pagenumber | 0).toString()) {
+      data.pagenumber = PDFView.page;
+    }
+    PDFView.page++;
+    break;
+  case 'projector3':
+    PDFView.page = (data.pagenumber | 0);
+    if (data.pagenumber !== (data.pagenumber | 0).toString()) {
+      data.pagenumber = PDFView.page;
+    }
+    PDFView.page = PDFView.page + 2;
+    break;
+  default:
+    PDFView.page = (data.pagenumber | 0);
+    if (data.pagenumber !== (data.pagenumber | 0).toString()) {
+      data.pagenumber = PDFView.page;
+    }
+  }
+});
+
 //A key is pressed down.
 window.addEventListener('keypressedremote', function keypressedremote(data) {
   if (OverlayManager.active) {
@@ -5998,8 +6024,26 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
         /* falls through */
       case 75: // 'k'
       case 80: // 'p'
-        PDFView.page--;
-        handled = true;
+        var viewer = cookie.get('viewer');
+        switch (viewer) {
+        case 'projector1':
+          PDFView.page--;
+          handled = true;
+          break;
+        case 'projector2':
+          if (PDFView.previousPageNumber > 2)
+            PDFView.page--;
+          handled = true;
+          break;
+        case 'projector3':
+          if (PDFView.previousPageNumber > 3)
+            PDFView.page--;
+          handled = true;
+          break;
+        default:
+          PDFView.page--;
+          handled = true;
+        }
         break;
       case 27: // esc key
         if (SecondaryToolbar.opened) {
@@ -6027,10 +6071,32 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
         /* falls through */
       case 74: // 'j'
       case 78: // 'n'
-        PDFView.page++;
-        handled = true;
+        var viewer = cookie.get('viewer');
+        switch (viewer) {
+        case 'projector1':
+          PDFView.page++;
+          handled = true;
+          break;
+        case 'projector2':
+          console.log(PDFView.previousPageNumber);
+          if (PDFView.previousPageNumber == 1)
+            PDFView.page = 3;
+          else
+            PDFView.page++;
+          handled = true;
+          break;
+        case 'projector3':
+          if (PDFView.previousPageNumber == 1)
+            PDFView.page = 4;
+          else
+            PDFView.page++;
+          handled = true;
+          break;
+        default:
+          PDFView.page++;
+          handled = true;
+        }
         break;
-
       case 36: // home
         if (PresentationMode.active || PDFView.page > 1) {
           PDFView.page = 1;
