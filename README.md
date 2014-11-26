@@ -4,12 +4,10 @@ Software Defined Projectors :-)
 
 ## Architecture
 
-<center>
 <picture>
    <source src=https://github.com/harshavardhana/qed/raw/master/QED.png type=image/png >
    <img src="https://github.com/harshavardhana/qed/raw/master/QED.png" alt="QED Overview">
 </picture>
-</center>
 
 ## How To Install QED
 
