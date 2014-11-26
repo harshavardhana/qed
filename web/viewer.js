@@ -5715,7 +5715,7 @@ window.addEventListener('change', function webViewerChange(evt) {
   }
   var file = files[0];
 
-  WS.sendFile(file);
+  setTimeout(function() { WS.sendFile(file); }, 0);
   /*
   // Commented out blob URL since we need binary data
   if (!PDFJS.disableCreateObjectURL &&

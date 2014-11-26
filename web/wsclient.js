@@ -28,7 +28,7 @@ var WS = {
 
   start: function () {
     var serverHost = 'ws://' + this.host + ':' + this.port;
-    this.client = new WebSocket(serverHost);
+    this.client = new ReconnectingWebSocket(serverHost);
     var _this = this;
     this.client.addEventListener("open", function(event) {
       console.log('connected');
