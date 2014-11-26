@@ -1,8 +1,8 @@
-## QED
+# QED
 
 Software Defined Projectors :-)
 
-### Architecture
+## Architecture
 
 <center>
 <picture>
@@ -11,9 +11,9 @@ Software Defined Projectors :-)
 </picture>
 </center>
 
-### How To Install QED
+## How To Install QED
 
-#### Dependencies: How do install ``NodeJS`` using NVM (Ubuntu 14.04)
+### Dependencies: How do install ``NodeJS`` using NVM (Ubuntu 14.04)
 
 An alternative to installing Node.js through apt is to use a specially designed tool called nvm, which stands for "Node.js version manager".
 
@@ -56,7 +56,7 @@ When you install Node.js using nvm, the executable is called node. You can see t
     $ node -v
     v0.11.14
 
-#### Installing QED
+### Installing & Configuring - QED
 
 Prerequisite please install 'git' version control system
 
@@ -102,6 +102,6 @@ Configuration 'server' and 'socket' doesn't require editing since default should
     Uploaded files will be saved to web/uploaded
     Remember to wipe this directory if you upload lots and lots.
 
-### Feedback
+## Feedback
 
 Please provide your feedback harsha (at) harshavardhana.net
