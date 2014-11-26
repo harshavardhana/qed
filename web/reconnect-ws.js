@@ -63,7 +63,7 @@
     function ReconnectingWebSocket(url, protocols) {
         // These can be altered by calling code.
         /** Whether this instance should log debug messages. */
-        this.debug = true;
+        this.debug = false;
         /** The number of milliseconds to delay before attempting to reconnect. */
         this.reconnectInterval = 1000;
         /** The rate of increase of the reconnect delay. Allows reconnect attempts to back off when problems persist. */
@@ -158,9 +158,7 @@
                     self.readyState = WebSocket.CONNECTING;
                     eventTarget.dispatchEvent(new Event('connecting'));
                     if (!reconnectAttempt && !timedOut) {
-                        if (self.debug || ReconnectingWebSocket.debugAll) {
-                            console.debug('ReconnectingWebSocket', 'onclose', url);
-                        }
+                        console.debug('ReconnectingWebSocket', 'onclose', url);
                         eventTarget.dispatchEvent(new Event('close'));
                     }
                     setTimeout(function() {
@@ -178,9 +176,7 @@
                 eventTarget.dispatchEvent(e);
             };
             ws.onerror = function(event) {
-                if (self.debug || ReconnectingWebSocket.debugAll) {
-                    console.debug('ReconnectingWebSocket', 'onerror', url, event);
-                }
+                console.debug('ReconnectingWebSocket', 'onerror', url, event);
                 eventTarget.dispatchEvent(new Event('event'));
             };
         }
