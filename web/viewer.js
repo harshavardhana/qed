@@ -2680,7 +2680,7 @@ var PDFView = {
                      this.renderHighestPriority.bind(this));
 
     Preferences.initialize();
-
+    /*
     PDFFindBar.initialize({
       bar: document.getElementById('findbar'),
       toggleButton: document.getElementById('viewFind'),
@@ -2692,7 +2692,7 @@ var PDFView = {
       findPreviousButton: document.getElementById('findPrevious'),
       findNextButton: document.getElementById('findNext')
     });
-
+    */
     PDFFindController.initialize({
       pdfPageSource: this,
       integratedFind: this.supportsIntegratedFind
@@ -5558,12 +5558,14 @@ function webViewerInitialized() {
 
   document.getElementById('previous').addEventListener('click',
     function() {
-      PDFView.page--;
+      var pagenumber = (PDFView.page - 1);
+      WS.sendPageNumber(pagenumber);
     });
 
   document.getElementById('next').addEventListener('click',
     function() {
-      PDFView.page++;
+      var pagenumber = (PDFView.page + 1);
+      WS.sendPageNumber(pagenumber);
     });
 
   document.getElementById('zoomIn').addEventListener('click',
