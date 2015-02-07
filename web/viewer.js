@@ -5879,7 +5879,7 @@ window.addEventListener('click', function click(evt) {
 }, false);
 
 window.addEventListener('keydown', function keydown(evt) {
-    WS.sendKeyStroke(evt);
+    WS.sendKeyStroke(evt, PDFView.page + 1);
 }, true);
 
 window.addEventListener('pagenumber', function pagenumber(data) {
@@ -5896,14 +5896,34 @@ window.addEventListener('pagenumber', function pagenumber(data) {
     if (data.pagenumber !== (data.pagenumber | 0).toString()) {
       data.pagenumber = PDFView.page;
     }
-    PDFView.page++;
+    switch (true) {
+    case (data.pagenumber <= 3):
+      PDFView.page = 1;
+      break;
+    case (data.pagenumber > 3):
+      PDFView.page = data.pagenumber - 2;
+      break;
+    default:
+      PDFView.page = 1;
+      break;
+    };
     break;
   case 'projector3':
     PDFView.page = (data.pagenumber | 0);
     if (data.pagenumber !== (data.pagenumber | 0).toString()) {
       data.pagenumber = PDFView.page;
     }
-    PDFView.page = PDFView.page + 2;
+    switch (true) {
+    case (data.pagenumber <= 2):
+      PDFView.page = 1;
+      break;
+    case (data.pagenumber > 2):
+      PDFView.page = data.pagenumber - 1;
+      break;
+    default:
+      PDFView.page = 1;
+      break;
+    };
     break;
   default:
     PDFView.page = (data.pagenumber | 0);
@@ -5920,6 +5940,7 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
   }
   var evt = data.keyevent;
   var cmd = data.keyevent.cmd;
+  var pagenumber = data.pagenumber;
   var handled = false;
 
   // First, handle the key bindings that are independent whether an input
@@ -6080,18 +6101,31 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
           handled = true;
           break;
         case 'projector2':
-          console.log(PDFView.previousPageNumber);
-          if (PDFView.previousPageNumber == 1)
-            PDFView.page = 3;
-          else
-            PDFView.page++;
+          switch (true) {
+          case (pagenumber <= 3):
+            PDFView.page = 1;
+            break;
+          case (pagenumber > 3):
+            PDFView.page = pagenumber - 2;
+            break;
+          default:
+            PDFView.page = 1;
+            break;
+          };
           handled = true;
           break;
         case 'projector3':
-          if (PDFView.previousPageNumber == 1)
-            PDFView.page = 4;
-          else
-            PDFView.page++;
+          switch (true) {
+          case (pagenumber <= 2):
+            PDFView.page = 1;
+            break;
+          case (pagenumber > 2):
+            PDFView.page = pagenumber - 1;
+            break;
+          default:
+            PDFView.page = 1;
+            break;
+          };
           handled = true;
           break;
         default:

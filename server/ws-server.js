@@ -96,12 +96,13 @@ WebSocketServer.prototype = {
 		conn: ws,
 		address: remoteaddress,
 	      });
-              var data = JSON.stringify({event: 'init',
-                                         viewer: projector});
-              send_message_data(data, ws);
+	      var data = JSON.stringify({event: 'init',
+					 viewer: projector});
+	      send_message_data(data, ws);
 	    } else if (message.event == 'key') {
 	      var data = JSON.stringify({event: 'key',
-					 keyevent: message.keyevent});
+					 keyevent: message.keyevent,
+					 pagenumber: message.pagenumber});
 	      send_message_all_clients(data);
 	    } else if (message.event == 'zoom') {
 	      var data = JSON.stringify({event: 'zoom',

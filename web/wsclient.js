@@ -33,10 +33,10 @@ var WS = {
     this.client.addEventListener("open", function(event) {
       console.log('connected');
       if (_this.client.readyState != WebSocket.OPEN)
-        throw new Error('Not connected');
+	throw new Error('Not connected');
       var message = {
-        fname: null,
-        event: 'init'
+	fname: null,
+	event: 'init'
       };
       _this.client.send(JSON.stringify(message));
     });
@@ -48,53 +48,54 @@ var WS = {
       var data = JSON.parse(event.data);
       switch (data.event) {
       case 'init':
-        if (data.viewer !== 'undefined') {
-          cookie.set('viewer', data.viewer, {
-            expires: 3650, //expires in 10yrs
-          });
-        }
-        break;
+	if (data.viewer !== 'undefined') {
+	  cookie.set('viewer', data.viewer, {
+	    expires: 3650, //expires in 10yrs
+	  });
+	}
+	break;
       case 'complete':
-        console.log('Server reported send file: ' + data.path + ' Success');
-        var event = document.createEvent('UIEvents');
-        event.initUIEvent('openpdf', false, false, window, 0);
-        event.pdfpath = data.path;
-        window.dispatchEvent(event);
-        break;
+	console.log('Server reported send file: ' + data.path + ' Success');
+	var event = document.createEvent('UIEvents');
+	event.initUIEvent('openpdf', false, false, window, 0);
+	event.pdfpath = data.path;
+	window.dispatchEvent(event);
+	break;
       case 'key':
-        // Handle generic keypressed event
-        var event = document.createEvent('UIEvents');
-        event.initUIEvent('keypressedremote', false, true, window, 0);
-        event.keyevent = data.keyevent;
-        window.dispatchEvent(event);
-        break;
+	// Handle generic keypressed event
+	var event = document.createEvent('UIEvents');
+	event.initUIEvent('keypressedremote', false, true, window, 0);
+	event.keyevent = data.keyevent;
+	event.pagenumber = data.pagenumber
+	window.dispatchEvent(event);
+	break;
       case 'zoom':
-        // Handle zoom click event
-        if (data.clickevent == 'zoomIn') {
-          PDFView.zoomIn();
-        } else if (data.clickevent == 'zoomOut') {
-          PDFView.zoomOut();
-        }
-        break;
+	// Handle zoom click event
+	if (data.clickevent == 'zoomIn') {
+	  PDFView.zoomIn();
+	} else if (data.clickevent == 'zoomOut') {
+	  PDFView.zoomOut();
+	}
+	break;
       case 'select':
-        PDFView.setScale(data.scale);
-        break;
+	PDFView.setScale(data.scale);
+	break;
       case 'pagenumber':
-        // Handle generic pagenumber event
-        var event = document.createEvent('UIEvents');
-        event.initUIEvent('pagenumber', false, true, window, 0);
-        event.pagenumber = data.pagenumber;
-        window.dispatchEvent(event);
-        break;
+	// Handle generic pagenumber event
+	var event = document.createEvent('UIEvents');
+	event.initUIEvent('pagenumber', false, true, window, 0);
+	event.pagenumber = data.pagenumber;
+	window.dispatchEvent(event);
+	break;
       case 'error':
-        PDFView.cleanup();
-        cookie.remove('viewer');
-        throw new Error('Server reported send error for file ' + data.path);
-        break;
+	PDFView.cleanup();
+	cookie.remove('viewer');
+	throw new Error('Server reported send error for file ' + data.path);
+	break;
       default:
-        PDFView.cleanup();
-        cookie.remove('viewer');
-        throw new Error("Invalid unrecognized event");
+	PDFView.cleanup();
+	cookie.remove('viewer');
+	throw new Error("Invalid unrecognized event");
       }
     });
   },
@@ -106,7 +107,7 @@ var WS = {
     this.client.send(JSON.stringify(this.message));
     this.client.send(file);
   },
-  sendKeyStroke: function(keyevent) {
+  sendKeyStroke: function(keyevent, value) {
     if (this.client.readyState != WebSocket.OPEN)
       throw new Error('Not connected');
     this.message.fname = null;
@@ -114,9 +115,10 @@ var WS = {
     this.message.keyevent = {};
     this.message.keyevent.keyCode = keyevent.keyCode;
     this.message.keyevent.cmd = ((keyevent.ctrlKey ? 1 : 0) |
-                                 (keyevent.altKey ? 2 : 0) |
-                                 (keyevent.shiftKey ? 4 : 0) |
-                                 (keyevent.metaKey ? 8 : 0));
+				 (keyevent.altKey ? 2 : 0) |
+				 (keyevent.shiftKey ? 4 : 0) |
+				 (keyevent.metaKey ? 8 : 0));
+    this.message.pagenumber = value
     this.client.send(JSON.stringify(this.message));
   },
   sendMouseClick: function(clickAction) {
