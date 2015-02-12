@@ -5435,6 +5435,9 @@ function webViewerInitialized() {
   var hash = document.location.hash.substring(1);
   var hashParams = PDFView.parseQueryString(hash);
 
+  // disable PDFJS history
+  PDFJS.disableHistory = true;
+
   if ('disableWorker' in hashParams) {
     PDFJS.disableWorker = (hashParams['disableWorker'] === 'true');
   }
