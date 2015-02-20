@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -x
 USER=$1
 
 if [ $# -lt 1 ]; then
@@ -9,12 +10,12 @@ fi
 
 grep -q 'start-services.js' /etc/rc.local
 services=$?
-grep -q $USER /etc/rc.local
+grep -q ${USER} /etc/rc.local
 user=$?
-if [ $services -eq 0 ]; then
-    if [ $user -eq 0 ]; then
+if [ $services -eq 1 ]; then
+    if [ $user -eq 1 ]; then
 	echo "Adding qed services to $USER"
-	echo "(sudo -u $USER bash -c "cd /home/$USER/qed && ./start-services.js")&" >> /etc/rc.local
+	echo "(sudo -u $USER bash -c \"cd /home/$USER/qed && ./start-services.js\")&" >> /etc/rc.local
     else
 	echo "Found qed services for $USER"
     fi
