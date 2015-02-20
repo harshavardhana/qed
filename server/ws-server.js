@@ -121,18 +121,28 @@ WebSocketServer.prototype = {
 	} else {
 	  var fname = _this.root + '/uploaded/' + message.fname;
 	  var replyfname = '/uploaded/' + message.fname;
-	  fs.writeFile(fname, data, function(error) {
-	    if (error) {
-	      console.log(error);
-	      send_message_all_clients(JSON.stringify({event: 'error',
-						       path: replyfname,
-						       message: error.message}));
-	      return;
-	    } else {
-	      send_message_all_clients(JSON.stringify({event: 'complete',
-						       path: replyfname}));
-	      message = null;
-	    }
+	  fs.stat(fname, function(err, stats) {
+	      if (err) {
+		  fs.writeFile(fname, data, function(error) {
+		      if (error) {
+			  console.log(error);
+			  send_message_all_clients(JSON.stringify({event: 'error',
+								   path: replyfname,
+								   message: error.message}));
+			  return;
+		      } else {
+			  send_message_all_clients(JSON.stringify({event: 'complete',
+								   path: replyfname}));
+			  message = null;
+		      }
+		  });
+	      } else {
+		  if (stats.isFile()) {
+		      send_message_all_clients(JSON.stringify({event: 'complete',
+							       path: replyfname}));
+		      message = null;
+		  }
+	      }
 	  });
 	}
       });

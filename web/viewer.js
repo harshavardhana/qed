@@ -36,7 +36,7 @@ var VERTICAL_PADDING = 5;
 var MAX_AUTO_SCALE = 1.25;
 var MIN_SCALE = 0.25;
 var MAX_SCALE = 10.0;
-var VIEW_HISTORY_MEMORY = 20;
+var VIEW_HISTORY_MEMORY = 1;
 var SCALE_SELECT_CONTAINER_PADDING = 8;
 var SCALE_SELECT_PADDING = 22;
 var THUMBNAIL_SCROLL_MARGIN = -19;
@@ -6058,12 +6058,12 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
           handled = true;
           break;
         case 'projector2':
-          if (PDFView.previousPageNumber > 2)
+          if (pagenumber > 2)
             PDFView.page--;
           handled = true;
           break;
         case 'projector3':
-          if (PDFView.previousPageNumber > 3)
+          if (pagenumber > 3)
             PDFView.page--;
           handled = true;
           break;
