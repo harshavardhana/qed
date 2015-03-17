@@ -72,13 +72,13 @@ var WS = {
       case 'zoom':
 	// Handle zoom click event
 	if (data.clickevent == 'zoomIn') {
-	  PDFView.zoomIn();
+	  PDFViewerApplication.zoomIn();
 	} else if (data.clickevent == 'zoomOut') {
-	  PDFView.zoomOut();
+	  PDFViewerApplication.zoomOut();
 	}
 	break;
       case 'select':
-	PDFView.setScale(data.scale);
+	PDFViewerApplication.setScale(data.scale);
 	break;
       case 'pagenumber':
 	// Handle generic pagenumber event
@@ -88,12 +88,12 @@ var WS = {
 	window.dispatchEvent(event);
 	break;
       case 'error':
-	PDFView.cleanup();
+	PDFViewerApplication.cleanup();
 	cookie.remove('viewer');
 	throw new Error('Server reported send error for file ' + data.path);
 	break;
       default:
-	PDFView.cleanup();
+	PDFViewerApplication.cleanup();
 	cookie.remove('viewer');
 	throw new Error("Invalid unrecognized event");
       }
