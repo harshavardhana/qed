@@ -7152,12 +7152,7 @@ window.addEventListener('click', function click(evt) {
 }, false);
 
 window.addEventListener('keydown', function keydown(evt) {
-    switch (evt.keyCode) {
-    case 80:
-      WS.sendKeyStroke(evt, PDFViewerApplication.page - 1);
-    case 78:
-      WS.sendKeyStroke(evt, PDFViewerApplication.page + 1);
-    }
+    WS.sendKeyStroke(evt, PDFViewerApplication.page + 1);
 }, true);
 
 window.addEventListener('pagenumber', function pagenumber(data) {
