@@ -7339,12 +7339,12 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
           handled = true;
           break;
         case 'projector2':
-          if (pagenumber > 2)
+          if (pagenumber > 3)
             PDFViewerApplication.page--;
           handled = true;
           break;
         case 'projector3':
-          if (pagenumber > 3)
+          if (pagenumber > 2)
             PDFViewerApplication.page--;
           handled = true;
           break;
