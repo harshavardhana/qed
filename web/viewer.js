@@ -6792,13 +6792,13 @@ function webViewerInitialized() {
 
   document.getElementById('previous').addEventListener('click',
     function() {
-      var pagenumber = (PDFView.page - 1);
+      var pagenumber = (PDFViewerApplication.page - 1);
       WS.sendPageNumber(pagenumber);
     });
 
   document.getElementById('next').addEventListener('click',
     function() {
-      var pagenumber = (PDFView.page + 1);
+      var pagenumber = (PDFViewerApplication.page + 1);
       WS.sendPageNumber(pagenumber);
     });
 
@@ -7152,7 +7152,12 @@ window.addEventListener('click', function click(evt) {
 }, false);
 
 window.addEventListener('keydown', function keydown(evt) {
-    WS.sendKeyStroke(evt, PDFViewerApplication.page + 1);
+    switch (evt.keyCode) {
+    case 80:
+      WS.sendKeyStroke(evt, PDFViewerApplication.page - 1);
+    case 78:
+      WS.sendKeyStroke(evt, PDFViewerApplication.page + 1);
+    }
 }, true);
 
 window.addEventListener('pagenumber', function pagenumber(data) {
