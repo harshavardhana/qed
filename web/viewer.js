@@ -7226,19 +7226,21 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
        pdfViewer.presentationModeState === PresentationModeState.FULLSCREEN);
 
     switch (evt.keyCode) {
+      /*
       case 70: // f
         if (!PDFViewerApplication.supportsIntegratedFind) {
-          PDFViewerApplication.findBar.open();
+          //  PDFViewerApplication.findBar.open();
           handled = true;
         }
         break;
       case 71: // g
         if (!PDFViewerApplication.supportsIntegratedFind) {
-          PDFViewerApplication.findBar.dispatchEvent('again',
-                                                     cmd === 5 || cmd === 12);
+          //PDFViewerApplication.findBar.dispatchEvent('again',
+          //                                         cmd === 5 || cmd === 12);
           handled = true;
         }
         break;
+        */
       case 61: // FF/Mac '='
       case 107: // FF '+' and '='
       case 187: // Chrome '+'
@@ -7353,6 +7355,7 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
           handled = true;
         }
         break;
+        /*
       case 27: // esc key
         if (SecondaryToolbar.opened) {
           SecondaryToolbar.close();
@@ -7364,6 +7367,7 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
           handled = true;
         }
         break;
+        */
       case 40: // down arrow
       case 34: // pg down
       case 32: // spacebar
