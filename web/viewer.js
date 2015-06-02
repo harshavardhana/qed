@@ -7173,9 +7173,6 @@ window.addEventListener('pagenumber', function pagenumber(data) {
     case (data.pagenumber <= 3):
       PDFViewerApplication.page = 1;
       break;
-    case (data.pagenumer > PDFViewerApplication.pagesCount()):
-      PDFViewerApplication.page = PDFViewerApplication.pagesCount() - 2;
-      break;
     case (data.pagenumber > 3):
       PDFViewerApplication.page = data.pagenumber - 2;
       break;
@@ -7192,9 +7189,6 @@ window.addEventListener('pagenumber', function pagenumber(data) {
     switch (true) {
     case (data.pagenumber <= 2):
       PDFViewerApplication.page = 1;
-      break;
-    case (data.pagenumber > PDFViewerApplication.pagesCount()):
-      PDFViewerApplication.page = PDFViewerApplication.pagesCount() - 1;
       break;
     case (data.pagenumber > 2):
       PDFViewerApplication.page = data.pagenumber - 1;
@@ -7401,9 +7395,6 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
           case (pagenumber <= 3):
             PDFViewerApplication.page = 1;
             break;
-          case (pagenumer > PDFViewerApplication.pagesCount()):
-            PDFViewerApplication.page = PDFViewerApplication.pagesCount() - 2;
-            break;
           case (pagenumber > 3):
             PDFViewerApplication.page = pagenumber - 2;
             break;
@@ -7417,9 +7408,6 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
           switch (true) {
           case (pagenumber <= 2):
             PDFViewerApplication.page = 1;
-            break;
-          case (pagenumer > PDFViewerApplication.pagesCount()):
-            PDFViewerApplication.page = PDFViewerApplication.pagesCount() - 1;
             break;
           case (pagenumber > 2):
             PDFViewerApplication.page = pagenumber - 1;
