@@ -33,10 +33,10 @@ var WS = {
     this.client.addEventListener("open", function(event) {
       console.log('connected');
       if (_this.client.readyState != WebSocket.OPEN)
-	throw new Error('Not connected');
+        throw new Error('Not connected');
       var message = {
-	fname: null,
-	event: 'init'
+        fname: null,
+        event: 'init'
       };
       _this.client.send(JSON.stringify(message));
     });
@@ -48,54 +48,58 @@ var WS = {
       var data = JSON.parse(event.data);
       switch (data.event) {
       case 'init':
-	if (data.viewer !== 'undefined') {
-	  cookie.set('viewer', data.viewer, {
-	    expires: 3650, //expires in 10yrs
-	  });
-	}
-	break;
+        if (data.viewer !== 'undefined') {
+          cookie.set('viewer', data.viewer, {
+            expires: 3650, // expires in 10yrs
+          });
+        }
+        break;
       case 'complete':
-	console.log('Server reported send file: ' + data.path + ' Success');
-	var event = document.createEvent('UIEvents');
-	event.initUIEvent('openpdf', false, false, window, 0);
-	event.pdfpath = data.path;
-	window.dispatchEvent(event);
-	break;
+        console.log('Server reported send file: ' + data.path + ' Success');
+        var event = document.createEvent('UIEvents');
+        event.initUIEvent('openpdf', false, false, window, 0);
+        event.pdfpath = data.path;
+        window.dispatchEvent(event);
+        break;
       case 'key':
-	// Handle generic keypressed event
-	var event = document.createEvent('UIEvents');
-	event.initUIEvent('keypressedremote', false, true, window, 0);
-	event.keyevent = data.keyevent;
-	event.pagenumber = data.pagenumber
-	window.dispatchEvent(event);
-	break;
+        // if we reached final page do not progress further
+        if (data.pagenumber > PDFViewerApplication.pagesCount) {
+          break;
+        }
+        // Handle generic keypressed event
+        var event = document.createEvent('UIEvents');
+        event.initUIEvent('keypressedremote', false, true, window, 0);
+        event.keyevent = data.keyevent;
+        event.pagenumber = data.pagenumber
+        window.dispatchEvent(event);
+        break;
       case 'zoom':
-	// Handle zoom click event
-	if (data.clickevent == 'zoomIn') {
-	  PDFViewerApplication.zoomIn();
-	} else if (data.clickevent == 'zoomOut') {
-	  PDFViewerApplication.zoomOut();
-	}
-	break;
+        // Handle zoom click event
+        if (data.clickevent == 'zoomIn') {
+          PDFViewerApplication.zoomIn();
+        } else if (data.clickevent == 'zoomOut') {
+          PDFViewerApplication.zoomOut();
+        }
+        break;
       case 'select':
-	PDFViewerApplication.setScale(data.scale);
-	break;
+        PDFViewerApplication.setScale(data.scale);
+        break;
       case 'pagenumber':
-	// Handle generic pagenumber event
-	var event = document.createEvent('UIEvents');
-	event.initUIEvent('pagenumber', false, true, window, 0);
-	event.pagenumber = data.pagenumber;
-	window.dispatchEvent(event);
-	break;
+        // Handle generic pagenumber event
+        var event = document.createEvent('UIEvents');
+        event.initUIEvent('pagenumber', false, true, window, 0);
+        event.pagenumber = data.pagenumber;
+        window.dispatchEvent(event);
+        break;
       case 'error':
-	PDFViewerApplication.cleanup();
-	cookie.remove('viewer');
-	throw new Error('Server reported send error for file ' + data.path);
-	break;
+        PDFViewerApplication.cleanup();
+        cookie.remove('viewer');
+        throw new Error('Server reported send error for file ' + data.path);
+        break;
       default:
-	PDFViewerApplication.cleanup();
-	cookie.remove('viewer');
-	throw new Error("Invalid unrecognized event");
+        PDFViewerApplication.cleanup();
+        cookie.remove('viewer');
+        throw new Error("Invalid unrecognized event");
       }
     });
   },
@@ -115,9 +119,9 @@ var WS = {
     this.message.keyevent = {};
     this.message.keyevent.keyCode = keyevent.keyCode;
     this.message.keyevent.cmd = ((keyevent.ctrlKey ? 1 : 0) |
-				 (keyevent.altKey ? 2 : 0) |
-				 (keyevent.shiftKey ? 4 : 0) |
-				 (keyevent.metaKey ? 8 : 0));
+                                 (keyevent.altKey ? 2 : 0) |
+                                 (keyevent.shiftKey ? 4 : 0) |
+                                 (keyevent.metaKey ? 8 : 0));
     this.message.pagenumber = value
     this.client.send(JSON.stringify(this.message));
   },
@@ -141,7 +145,6 @@ var WS = {
     if (this.client.readyState != WebSocket.OPEN)
       throw new Error('Not connected');
     this.message.fname = null;
-    // Handle the user inputting a floating point number.
     this.message.event = 'pagenumber';
     this.message.pagenumber = value;
     this.client.send(JSON.stringify(this.message));

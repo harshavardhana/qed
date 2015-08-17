@@ -8,12 +8,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/harshavardhana/qed.git"
+    "url": "git+https://github.com/harshavardhana/qed"
   },
   "author": "Harshavardhana",
-  "license": "ALv2",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/harshavardhana/qed/issues"
+    "url": "https://github.com/harshavardhana/qed/issues",
+    "mail": ""
   },
   "homepage": "https://github.com/harshavardhana/qed",
   "dependencies": {

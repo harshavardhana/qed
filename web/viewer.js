@@ -7423,6 +7423,7 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
           handled = true;
         }
         break;
+        /*
       case 36: // home
         if (PresentationMode.active || PDFViewerApplication.page > 1) {
           PDFViewerApplication.page = 1;
@@ -7436,7 +7437,7 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
           handled = true;
         }
         break;
-
+        */
       case 72: // 'h'
         if (!PresentationMode.active) {
           HandTool.toggle();
