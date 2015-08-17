@@ -1,3 +1,5 @@
+/* -*- Mode: js; js-indent-level: 2; indent-tabs-mode: nil; tab-width: 2 -*- */
+/* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 /* Copyright 2014 Harshavardhana <harsha@harshavardhana.net>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,6 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/*jslint node: true */
+
+'use strict';
 
 function Error() {
   this.name = "";

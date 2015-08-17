@@ -46,11 +46,7 @@ readProjectorConfig(filename, function (err, data) {
   socket.host = configObj.socket.host;
   server.port = configObj.server.port;
   socket.port = configObj.socket.port;
-  var rootPath = configObj.root.path
-  if (configObj.root.path === '<placeholder>') {
-    rootPath = '.';
-  }
-  socket.root = rootPath;
+  socket.root = configObj.root.path;
   socket.pobject = configObj.projectors; /* Projector list */
   server.start();
   socket.init();
