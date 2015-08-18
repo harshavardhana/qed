@@ -70,7 +70,10 @@ var WS = {
         if (data.keyevent.cmd === 0) {
           switch (data.keyevent.keyCode) {
             /* falls through */
-            case 39:
+            case 40: // down arrow
+            case 34: // pg down
+            case 32: // spacebar
+            case 39: // right arrow
             case 78: // 'j'
             case 79: // 'n'
               if ((data.pagenumber - 1) === PDFViewerApplication.pagesCount) {

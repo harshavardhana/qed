@@ -7303,21 +7303,11 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
 
   if (cmd === 0) { // no control key pressed at all.
     switch (evt.keyCode) {
+      /* falls through */
       case 38: // up arrow
       case 33: // pg up
       case 8: // backspace
-        if (!PresentationMode.active &&
-          PDFViewerApplication.currentScaleValue !== 'page-fit') {
-          break;
-        }
-        /* in presentation mode */
-        /* falls through */
       case 37: // left arrow
-        // horizontal scrolling using arrow keys
-        if (PDFViewerApplication.pdfViewer.isHorizontalScrollbarEnabled) {
-          break;
-        }
-        /* falls through */
       case 75: // 'k'
       case 80: // 'p'
         var viewer = cookie.get('viewer');
@@ -7341,20 +7331,11 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
           handled = true;
         }
         break;
+      /* falls through */
       case 40: // down arrow
       case 34: // pg down
       case 32: // spacebar
-        if (!PresentationMode.active &&
-            PDFViewerApplication.currentScaleValue !== 'page-fit') {
-          break;
-        }
-        /* falls through */
       case 39: // right arrow
-        // horizontal scrolling using arrow keys
-        if (PDFViewerApplication.pdfViewer.isHorizontalScrollbarEnabled) {
-          break;
-        }
-        /* falls through */
       case 74: // 'j'
       case 78: // 'n'
         var viewer = cookie.get('viewer');
