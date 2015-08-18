@@ -64,8 +64,23 @@ var WS = {
         window.dispatchEvent(event);
         break;
       case 'key':
-        // if we reached final page do not progress further
-        if (data.pagenumber > PDFViewerApplication.pagesCount) {
+        // if we reached final page do not progress further.
+        // Right arrow keys now do not
+        var skipped = false;
+        if (data.keyevent.cmd === 0) {
+          switch (data.keyevent.keyCode) {
+            /* falls through */
+            case 39:
+            case 78: // 'j'
+            case 79: // 'n'
+              if ((data.pagenumber - 1) === PDFViewerApplication.pagesCount) {
+                skipped = true;
+              }
+              break;
+          }
+        }
+        if (skipped === true) {
+          console.log("Presentation session finished!");
           break;
         }
         // Handle generic keypressed event

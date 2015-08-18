@@ -7227,21 +7227,6 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
        pdfViewer.presentationModeState === PresentationModeState.FULLSCREEN);
 
     switch (evt.keyCode) {
-      /*
-      case 70: // f
-        if (!PDFViewerApplication.supportsIntegratedFind) {
-          //  PDFViewerApplication.findBar.open();
-          handled = true;
-        }
-        break;
-      case 71: // g
-        if (!PDFViewerApplication.supportsIntegratedFind) {
-          //PDFViewerApplication.findBar.dispatchEvent('again',
-          //                                         cmd === 5 || cmd === 12);
-          handled = true;
-        }
-        break;
-        */
       case 61: // FF/Mac '='
       case 107: // FF '+' and '='
       case 187: // Chrome '+'
@@ -7356,19 +7341,6 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
           handled = true;
         }
         break;
-        /*
-      case 27: // esc key
-        if (SecondaryToolbar.opened) {
-          SecondaryToolbar.close();
-          handled = true;
-        }
-        if (!PDFViewerApplication.supportsIntegratedFind &&
-            PDFViewerApplication.findBar.opened) {
-          PDFViewerApplication.findBar.close();
-          handled = true;
-        }
-        break;
-        */
       case 40: // down arrow
       case 34: // pg down
       case 32: // spacebar
@@ -7424,21 +7396,6 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
           handled = true;
         }
         break;
-        /*
-      case 36: // home
-        if (PresentationMode.active || PDFViewerApplication.page > 1) {
-          PDFViewerApplication.page = 1;
-          handled = true;
-        }
-        break;
-      case 35: // end
-        if (PresentationMode.active || (PDFViewerApplication.pdfDocument &&
-            PDFViewerApplication.page < PDFViewerApplication.pagesCount)) {
-          PDFViewerApplication.page = PDFViewerApplication.pagesCount;
-          handled = true;
-        }
-        break;
-        */
       case 72: // 'h'
         if (!PresentationMode.active) {
           HandTool.toggle();
