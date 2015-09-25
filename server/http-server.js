@@ -77,7 +77,7 @@ WebServer.prototype = {
     }
     if (req.url == '/') {
       var viewerpath = path.join(this.root, 'viewer.html');
-      path.exists(viewerpath, function(exists) {
+      fs.exists(viewerpath, function(exists) {
         if (exists) {
           fs.readFile(viewerpath, function(err, content) {
             if (err) {
