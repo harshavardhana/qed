@@ -678,9 +678,10 @@ Preferences._readFromStorage = function (prefObj) {
   var hasAttachEvent = !!document.attachEvent;
 
   window.addEventListener('keydown', function(event) {
+
     // Intercept Cmd/Ctrl + P in all browsers.
     // Also intercept Cmd/Ctrl + Shift + P in Chrome and Opera
-    if (event.keyCode === 80/*P*/ && (event.ctrlKey || event.metaKey) &&
+    if (event.keyCode === 80 /*P*/ && (event.ctrlKey || event.metaKey) &&
         !event.altKey && (!event.shiftKey || window.chrome || window.opera)) {
       window.print();
       if (hasAttachEvent) {
@@ -703,7 +704,7 @@ Preferences._readFromStorage = function (prefObj) {
   if (hasAttachEvent) {
     document.attachEvent('onkeydown', function(event) {
       event = event || window.event;
-      if (event.keyCode === 80/*P*/ && event.ctrlKey) {
+      if (event.keyCode === 80 /*P*/ && event.ctrlKey) {
         event.keyCode = 0;
         return false;
       }
@@ -7216,6 +7217,11 @@ window.addEventListener('keypressedremote', function keypressedremote(data) {
   var evt = data.keyevent;
   var cmd = data.keyevent.cmd;
   var pagenumber = data.pagenumber;
+
+  if (evt.keyCode === 116) {
+    data.preventDefault();
+    return;
+  }
 
   // First, handle the key bindings that are independent whether an input
   // control is selected or not.
