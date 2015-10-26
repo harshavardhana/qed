@@ -9,7 +9,7 @@ Software Defined Projectors :-)
    <img src="https://github.com/harshavardhana/qed/raw/master/QED.png" alt="QED Overview">
 </picture>
 
-## How To Install QED
+## How to install QED ?
 
 ### Dependencies: How do install ``NodeJS`` using NVM (Ubuntu 14.04)
 
@@ -99,6 +99,17 @@ Configuration 'server' and 'socket' doesn't require editing since default should
     Socket server running at ws://0.0.0.0:4002 ...
     Uploaded files will be saved to web/uploaded
     Remember to wipe this directory if you upload lots and lots.
+
+## How to update QED ?
+
+To update qed with new changes, please read the following instructions:
+
+```
+$ cd qed
+$ git pull --rebase
+$ sudo killall node
+$ sudo /etc/rc.local
+```
 
 ## Feedback
 
