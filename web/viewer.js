@@ -4254,6 +4254,10 @@ var PDFViewer = (function pdfViewer() {
       }
 
       var pagesCount = pdfDocument.numPages;
+      document.getElementById('numPages').textContent =
+        mozL10n.get('page_of', {pageCount: pagesCount}, 'of {{pageCount}}');
+      document.getElementById('pageNumber').max = pagesCount;
+
       var pagesRefMap = this.pagesRefMap = {};
       var self = this;
 
@@ -6287,7 +6291,8 @@ var PDFViewerApplication = {
     // When opening a new file (when one is already loaded in the viewer):
     // Reset 'currentPageNumber', since otherwise the page's scale will be wrong
     // if 'currentPageNumber' is larger than the number of pages in the file.
-    this.pdfViewer.currentPageNumber = 1;
+    document.getElementById('pageNumber').value =
+      this.pdfViewer.currentPageNumber = 1;
 
     if (PDFHistory.initialDestination) {
       this.navigateTo(PDFHistory.initialDestination);
@@ -7066,6 +7071,7 @@ window.addEventListener('openpdf', function openpdf(evt) {
 window.addEventListener('pagechange', function pagechange(evt) {
   var page = evt.pageNumber;
   if (evt.previousPageNumber !== page) {
+    document.getElementById('pageNumber').value = page;
     if (PDFViewerApplication.sidebarOpen) {
       PDFViewerApplication.pdfThumbnailViewer.scrollThumbnailIntoView(page);
     }
