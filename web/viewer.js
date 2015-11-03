@@ -678,7 +678,6 @@ Preferences._readFromStorage = function (prefObj) {
   var hasAttachEvent = !!document.attachEvent;
 
   window.addEventListener('keydown', function(event) {
-
     // Intercept Cmd/Ctrl + P in all browsers.
     // Also intercept Cmd/Ctrl + Shift + P in Chrome and Opera
     if (event.keyCode === 80 /*P*/ && (event.ctrlKey || event.metaKey) &&
@@ -5658,7 +5657,9 @@ var PDFViewerApplication = {
   },
 
   get pagesCount() {
-    return this.pdfDocument.numPages;
+    if (this.pdfDocument !== null) {
+      return this.pdfDocument.numPages;
+    };
   },
 
   set page(val) {
@@ -5916,10 +5917,6 @@ var PDFViewerApplication = {
   executeNamedAction: function pdfViewExecuteNamedAction(action) {
     // See PDF reference, table 8.45 - Named action
     switch (action) {
-      case 'GoToPage':
-        document.getElementById('pageNumber').focus();
-        break;
-
       case 'GoBack':
         PDFHistory.back();
         break;
@@ -6107,10 +6104,6 @@ var PDFViewerApplication = {
     });
 
     var pagesCount = pdfDocument.numPages;
-    document.getElementById('numPages').textContent =
-      mozL10n.get('page_of', {pageCount: pagesCount}, 'of {{pageCount}}');
-    document.getElementById('pageNumber').max = pagesCount;
-
     var id = this.documentFingerprint = pdfDocument.fingerprint;
     var store = this.store = new ViewHistory(id);
 
@@ -6294,8 +6287,7 @@ var PDFViewerApplication = {
     // When opening a new file (when one is already loaded in the viewer):
     // Reset 'currentPageNumber', since otherwise the page's scale will be wrong
     // if 'currentPageNumber' is larger than the number of pages in the file.
-    document.getElementById('pageNumber').value =
-      this.pdfViewer.currentPageNumber = 1;
+    this.pdfViewer.currentPageNumber = 1;
 
     if (PDFHistory.initialDestination) {
       this.navigateTo(PDFHistory.initialDestination);
@@ -6814,14 +6806,6 @@ function webViewerInitialized() {
       WS.sendMouseClick("zoomOut");
     });
 
-  document.getElementById('pageNumber').addEventListener('click', function() {
-    this.select();
-  });
-
-  document.getElementById('pageNumber').addEventListener('change', function() {
-    WS.sendPageNumber(this.value);
-  });
-
   document.getElementById('scaleSelect').addEventListener('change',
     function() {
       WS.sendMouseSelect(this.value);
@@ -6888,13 +6872,6 @@ document.addEventListener('pagerendered', function (e) {
       'An error occurred while rendering the page.'), pageView.error);
   }
 
-
-  // If the page is still visible when it has finished rendering,
-  // ensure that the page number input loading indicator is hidden.
-  if (pageNumber === PDFViewerApplication.page) {
-    var pageNumberInput = document.getElementById('pageNumber');
-    pageNumberInput.classList.remove(PAGE_NUMBER_LOADING_INDICATOR);
-  }
 }, true);
 
 document.addEventListener('textlayerrendered', function (e) {
@@ -6902,6 +6879,12 @@ document.addEventListener('textlayerrendered', function (e) {
   var pageView = PDFViewerApplication.pdfViewer.getPageView(pageIndex);
 
 }, true);
+
+window.onbeforeunload = function() {
+  if (PDFViewerApplication.pdfDocument !== null) {
+    return "Dude where are you going?.. Think about kittens.";
+  };
+};
 
 window.addEventListener('presentationmodechanged', function (e) {
   var active = e.detail.active;
@@ -6943,16 +6926,9 @@ window.addEventListener('updateviewarea', function () {
   // Update the current bookmark in the browsing history.
   PDFHistory.updateCurrentBookmark(location.pdfOpenParams, location.pageNumber);
 
-  // Show/hide the loading indicator in the page number input element.
-  var pageNumberInput = document.getElementById('pageNumber');
   var currentPage =
     PDFViewerApplication.pdfViewer.getPageView(PDFViewerApplication.page - 1);
 
-  if (currentPage.renderingState === RenderingStates.FINISHED) {
-    pageNumberInput.classList.remove(PAGE_NUMBER_LOADING_INDICATOR);
-  } else {
-    pageNumberInput.classList.add(PAGE_NUMBER_LOADING_INDICATOR);
-  }
 }, true);
 
 window.addEventListener('resize', function webViewerResize(evt) {
@@ -7090,7 +7066,6 @@ window.addEventListener('openpdf', function openpdf(evt) {
 window.addEventListener('pagechange', function pagechange(evt) {
   var page = evt.pageNumber;
   if (evt.previousPageNumber !== page) {
-    document.getElementById('pageNumber').value = page;
     if (PDFViewerApplication.sidebarOpen) {
       PDFViewerApplication.pdfThumbnailViewer.scrollThumbnailIntoView(page);
     }
