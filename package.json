@@ -2,7 +2,6 @@
   "name": "qed",
   "version": "1.0.2",
   "description": "Software Defined Projectors",
-  "main": "start-services.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,5 +21,16 @@
   "homepage": "https://github.com/harshavardhana/qed",
   "dependencies": {
     "ws": "^0.7.2"
-  }
+  },
+  "keywords": [
+    "api",
+    "qed",
+    "pdfjs",
+    "mozilla",
+    "pdf",
+    "html5",
+    "projector",
+    "presentation",
+    "viewer"
+  ]
 }
