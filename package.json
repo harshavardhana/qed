@@ -10,6 +10,7 @@
     "url": "git+https://github.com/harshavardhana/qed"
   },
   "author": "Harshavardhana",
+  "contributors": ["y4m4"],
   "engines": {
     "node": ">= 0.10.0"
   },
