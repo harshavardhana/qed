@@ -1,8 +1,14 @@
-# QED
+# What is QED? 
 
-Software Defined Projectors :-)
+QED is a distributed projector system written in Javascript. Source is available free software/open source [Apache license 2.0](./LICENSE). 
 
-## Architecture
+## Description
+
+QED was inspired by a latin phrase `quod erat demonstrandum` meaning `which is what had to be proven`. Traditionally used in mathematics, since this software was primarily written for [MSRI](http://www.msri.org/web/msri) it seemed appropriate.
+
+QED is a simple and cost-effective way for beamer or powerpoint presentations to use 3 screens to show three consecutive slide, with automatic updating, and without requiring anything special of the presenter.  The system currently requires a "server" to which one uploads an ordinary beamer file and 3 projectors each connected to a commodity PC on the same network.
+
+## Basic Architecture
 
 <picture>
    <source src=https://github.com/harshavardhana/qed/raw/master/QED.png type=image/png >
@@ -11,7 +17,9 @@ Software Defined Projectors :-)
 
 ## How to install QED ?
 
-### Dependencies: How do install ``NodeJS`` using NVM (Ubuntu 14.04)
+### Installing ``NodeJS``
+
+How do install ``NodeJS`` using NVM (Ubuntu 14.04)
 
 An alternative to installing Node.js through apt is to use a specially designed tool called nvm, which stands for "Node.js version manager".
 
