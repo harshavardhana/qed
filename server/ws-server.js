@@ -22,6 +22,8 @@ var path = require('path');
 var fs = require('fs');
 var errors = require('./errors');
 var wsocket = require('ws').Server;
+var os = require('os');
+var ifaces = os.networkInterfaces();
 
 function WebSocketServer() {
   this.host = 'localhost';
@@ -69,8 +71,8 @@ WebSocketServer.prototype = {
     var uploaddir = this.root + '/uploaded';
     fs.mkdir(uploaddir, function(error) {
       // ignore errors, most likely means directory exists
-      console.log('Uploaded files will be saved to %s', uploaddir);
-      console.log('Remember to wipe this directory if you upload lots and lots.');
+      console.log('\nUploaded files will be saved to %s', uploaddir);
+      console.log('Remember to clean this directory from time to time, if you end up uploading lots of files.');
     });
   },
   start: function (callback) {
@@ -176,9 +178,18 @@ WebSocketServer.prototype = {
         console.log('Client error: %s', e.message);
       });
     });
-    console.log(
-      'Socket server running at ws://' + this.host + ':' + this.port + ' ...'
-    );
+    console.log('\nSocker server running at:');
+    var _this = this;
+    Object.keys(ifaces).forEach(function (ifname) {
+      ifaces[ifname].forEach(function (iface) {
+        if ('IPv4' !== iface.family) {
+          // skip over non-ipv4 addresses
+          return;
+        }
+        // This interface has only one ipv4 address
+        console.log('ws://' + iface.address + ':' + _this.port);
+      });
+    });
   }
 };
 

@@ -23,6 +23,8 @@
 var http = require('http');
 var path = require('path');
 var fs = require('fs');
+var os = require('os');
+var ifaces = os.networkInterfaces();
 
 var mimeTypes = {
   '.css': 'text/css',
@@ -55,12 +57,23 @@ function WebServer() {
     'POST': []
   };
 }
+
 WebServer.prototype = {
   start: function (callback) {
     this.server = http.createServer(this._handler.bind(this));
     this.server.listen(this.port, this.host, callback);
-    console.log(
-      'Web server running at http://' + this.host + ':' + this.port + '/');
+    console.log('\nWeb server running at:');
+    var _this = this;
+    Object.keys(ifaces).forEach(function (ifname) {
+      ifaces[ifname].forEach(function (iface) {
+        if ('IPv4' !== iface.family) {
+          // skip over non-ipv4 addresses
+          return;
+        }
+        // This interface has only one ipv4 address
+        console.log('http://' + iface.address + ':' + _this.port);
+      });
+    });
   },
   stop: function (callback) {
     this.server.close(callback);
