@@ -1,37 +1,34 @@
 {
-  "name": "qed",
-  "version": "1.0.2",
-  "description": "Software Defined Projectors",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/harshavardhana/qed"
-  },
-  "author": "Harshavardhana",
-  "contributors": ["y4m4"],
-  "engines": {
-    "node": ">= 0.10.0"
-  },
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/harshavardhana/qed/issues",
-    "mail": ""
-  },
-  "homepage": "https://github.com/harshavardhana/qed",
-  "dependencies": {
-    "ws": "^0.7.2"
-  },
-  "keywords": [
-    "api",
-    "qed",
-    "pdfjs",
-    "mozilla",
-    "pdf",
-    "html5",
-    "projector",
-    "presentation",
-    "viewer"
-  ]
+    "name": "qed",
+    "version": "2.0.0",
+    "description": "Software Defined Projectors",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/harshavardhana/qed"
+    },
+    "author": "Harshavardhana",
+    "contributors": ["y4m4"],
+    "license": "Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/harshavardhana/qed/issues",
+        "mail": ""
+    },
+    "homepage": "https://github.com/harshavardhana/qed",
+    "keywords": [
+        "api",
+        "qed",
+        "pdfjs",
+        "mozilla",
+        "pdf",
+        "html5",
+        "projector",
+        "presentation",
+        "viewer"
+    ],
+    "dependencies": {
+        "ws": "^2.2.0"
+    }
 }

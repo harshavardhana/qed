@@ -11,8 +11,8 @@ QED is a simple and cost-effective way for beamer or powerpoint presentations to
 ## Basic Architecture
 
 <picture>
-   <source src=https://github.com/harshavardhana/qed/raw/master/QED.png type=image/png >
-   <img src="https://github.com/harshavardhana/qed/raw/master/QED.png" alt="QED Overview">
+  <source src=https://github.com/harshavardhana/qed/raw/master/QED.png type=image/png >
+  <img src="https://github.com/harshavardhana/qed/raw/master/QED.png" alt="QED Overview">
 </picture>
 
 ## How to install QED ?
@@ -27,69 +27,87 @@ Using nvm, you can install multiple, self-contained versions of Node.js which wi
 
 To start off, we'll need to get the software packages from our Ubuntu repositories that will allow us to build source packages. The nvm script will leverage these tools to build the necessary components:
 
-    $ sudo apt-get update
-    $ sudo apt-get install build-essential libssl-dev git
+```
+$ sudo apt-get update
+$ sudo apt-get install build-essential libssl-dev
+```
 
 Once the prerequisite packages are installed, you can pull down the nvm installation script from the project's GitHub page. The version number may be different, but in general, you can download and install it with the following syntax:
 
-    $ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash
+```
+$ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.1/install.sh | bash
+$ nvm ls-remote
+...
+v6.8.0
+v6.8.1
+v6.9.0   (LTS: Boron)
+v6.9.1   (LTS: Boron)
+v6.9.2   (LTS: Boron)
+v6.9.3   (LTS: Boron)
+v6.9.4   (LTS: Boron)
+v6.9.5   (LTS: Boron)
+v6.10.0   (Latest LTS: Boron)
+```
 
-The script clones the nvm repository to `~/.nvm `and adds the source line to your profile (`~/.bash_profile`, `~/.zshrc` or `~/.profile`).
+The newest version at the time of this writing is `6.10.0`. You can install that by typing:
 
-    $ source ~/.profile
+```
+$ nvm install 6.10.0
+```
 
-The newest version at the time of this writing is `5.0`. You can install that by typing:
+Usually, nvm will switch to use the most recently installed version. You can explicitly tell nvm to use the version we just downloaded by typing
 
-    $ nvm install 5.0
-
-Usually, nvm will switch to use the most recently installed version. You can explicitly tell nvm to use the version we just downloaded by typing:
-
-    $ nvm use 5.0
+```
+$ nvm use v6.10.0
+```
 
 When you install Node.js using nvm, the executable is called node. You can see the version currently being used by the shell by typing:
 
-    $ node -v
-    v5.0
-
+```
+$ node -v
+v6.10.0
+```
 
 ### Installing QED
 
 Prerequisite please install 'git' version control system.
 
-    $ sudo apt-get install git
-
-    $ git clone https://github.com/msri/qed.git
-    $ cd qed
+```
+$ sudo apt-get install git
+$ git clone https://github.com/harshavardhana/qed.git
+$ cd qed
+```
 
 After you have cloned the repository, please use npm to install all the `QED` dependencies (all dependencies will be automatically installed)
 
-    $ nvm use 5.0
-    $ npm install
+```
+$ npm install
+```
 
 ### Configuring QED
 
 Now that we have successfully installed QED, we are ready to make configuration changes i.e ``config.json``
 
-~~~
+```js
 $ cat config.json
 {
-  "server": {
-    "port": 4001,
-    "root": "web",
-    "host": "0.0.0.0"
-  },
-  "socket": {
-    "port": 4002,
-    "root": "web",
-    "host": "0.0.0.0"
-  },
-  "projectors": {
-    "projector1": "10.0.0.25",
-    "projector2": "10.0.0.5",
-    "projector3": "10.0.0.53"
-  }
+    "server": {
+        "port": 80,
+        "root": "web",
+        "host": "0.0.0.0"
+    },
+    "socket": {
+        "port": 4002,
+        "root": "web",
+        "host": "0.0.0.0"
+    },
+    "projectors": {
+        "projector1": "10.0.0.25",
+        "projector2": "10.0.0.5",
+        "projector3": "10.0.0.53"
+    }
 }
-~~~
+```
 
 Configuration 'server' and 'socket' by default listen on all the IPs at ports `4001` and `4002` respectively.  You can configure them to use a different port of your choice depending on your local infrastructure. `projectors` are the commodify PC's which are connected to your projectors they need to have a static IP.
 
