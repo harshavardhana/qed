@@ -29,6 +29,6 @@
         "viewer"
     ],
     "dependencies": {
-        "ws": "^2.2.0"
+        "ws": "^3.3.1"
     }
 }
